@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ?v=2 on the icon links, not just the bare path: browsers cache a
+     favicon separately from the page's own cache (a hard reload doesn't
+     touch it), keyed by this exact URL - changing the URL is what actually
+     forces a refetch instead of relying on someone clearing site data. Bump
+     the version again if the icon itself ever changes and still shows the
+     old one. -->
+<link rel="icon" type="image/png" href="/media/logo.png?v=2">
+<link rel="apple-touch-icon" href="/media/logo.png?v=2">
+<title>Judo Otoshi</title>
+<meta name="description" content="Judo Otoshi - Dieppe, NB. Judo classes for kids, teens and adults, coached since 2012. Free trial class, no obligation.">
+<meta name="theme-color" content="#1A2C6E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Judo Otoshi">
+<meta property="og:title" content="Judo Otoshi - Dieppe, NB">
+<meta property="og:description" content="Find unbreakable confidence and focus, one belt at a time. Judo classes for kids, teens and adults in Dieppe.">
+<meta property="og:image" content="/media/hero-poster.jpg">
+<meta property="og:locale" content="fr_CA">
+<meta property="og:locale:alternate" content="en_CA">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Judo Otoshi - Dieppe, NB">
+<meta name="twitter:description" content="Find unbreakable confidence and focus, one belt at a time.">
+<meta name="twitter:image" content="/media/hero-poster.jpg">
+<script>
+  (function () {
+    var saved = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (saved === 'dark' || (!saved && prefersDark)) {
+      document.documentElement.classList.add('dark');
+    }
+  })();
+</script>
+</head>
+<body>
+<div id="root"></div>
+<script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

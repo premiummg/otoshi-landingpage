@@ -1,0 +1,79 @@
+@import "tailwindcss";
+@import "@premiummg/ui/styles.css";
+@config "../tailwind.config.js";
+
+/* Tailwind v4 dropped the v3 preflight default that gave unstyled buttons
+   cursor: pointer - restoring it for parity with the two sibling apps. */
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* -- Phone input (react-phone-number-input) --------------------------
+   Same class names/rules as timesheet-payroll-system's own
+   (frontend/src/index.css) - app-level, not part of @premiummg/ui's shared
+   styles.css, since only this app and that one use the library so far. */
+@layer components {
+  .phone-input-field {
+    @apply flex w-full border border-gray-300 rounded-lg overflow-hidden transition;
+  }
+  .phone-input-field:focus-within {
+    border-color: var(--premium-red);
+    box-shadow: 0 0 0 3px var(--premium-red-ring);
+  }
+  .phone-input-field .PhoneInputCountry {
+    @apply flex items-center gap-1.5 px-3 border-r border-gray-200 bg-gray-50 cursor-pointer select-none;
+  }
+  .phone-input-field .PhoneInputCountrySelect {
+    @apply absolute opacity-0 inset-0 cursor-pointer;
+  }
+  .phone-input-field .PhoneInputCountrySelectArrow {
+    @apply text-gray-400 text-xs;
+  }
+  .phone-input-field .PhoneInputInput {
+    @apply flex-1 px-3 py-2.5 text-sm outline-none bg-white;
+    color: var(--premium-dark-grey);
+  }
+  .phone-input-field .PhoneInputInput::placeholder {
+    @apply text-gray-400;
+  }
+}
+
+html.dark .phone-input-field {
+  border-color: #4B5563;
+}
+html.dark .phone-input-field .PhoneInputCountry {
+  background-color: #1F2937;
+  border-color: #4B5563;
+}
+html.dark .phone-input-field .PhoneInputInput {
+  background-color: #374151;
+  color: #F9FAFB;
+}
+
+/* -- <select class="input-field"> -------------------------------------
+   `.input-field` (from @premiummg/ui/styles.css) sets the same padding on
+   both <input> and <select>, but without `appearance-none` a <select>
+   keeps the BROWSER's own native chrome for everything else (its height
+   calculation, its own tiny dropdown arrow) - the two elements end up a
+   visibly different size even with identical classes. Stripping the native
+   appearance and drawing one consistent chevron ourselves is what makes a
+   <select> actually match the height/look of every plain <input> on this
+   form, in both themes (the arrow is a literal `currentColor`-independent
+   SVG, so it needs its own light/dark fill instead of inheriting text
+   color the way an icon font would). */
+select.input-field {
+  appearance: none;
+  -webkit-appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236B7280'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+}
+html.dark select.input-field {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%239CA3AF'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+}
