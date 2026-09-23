@@ -1,7 +1,7 @@
 import { PortraitFigure, Reveal } from '@premiummg/ui';
 import { SectionHead } from './SectionHead';
 import { useT } from '../lang';
-import { NAVY, NAVY_ACCENT, MEDIA, BAND_GROUND, H1_INK, BODY_INK } from '../palette';
+import { NAVY, NAVY_ACCENT, webp, BAND_GROUND, H1_INK, BODY_INK } from '../palette';
 
 // Malcolm's fix: the live paragraph used to close on a stale "two locations"
 // claim. The etymology stays - genuinely good, distinctive copy - but it now
@@ -30,7 +30,7 @@ export function Who() {
 
         <Reveal delay={120}>
           <PortraitFigure
-            imageSrc={`${MEDIA}/hero-tall.jpg`}
+            imageSrc={webp('hero-tall.jpg')}
             name="Judo Otoshi"
             role="Dieppe, NB"
             color={NAVY}

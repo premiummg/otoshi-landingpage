@@ -1,7 +1,7 @@
 import { FiPhone, FiMail, FiFacebook, FiInstagram } from 'react-icons/fi';
 import { PremiumLogo } from '@premiummg/ui';
 import { useT } from '../lang';
-import { MEDIA, PHONE, EMAIL } from '../palette';
+import { webp, PHONE, EMAIL } from '../palette';
 
 // A page-owned footer shell, not @premiummg/ui's SiteFooter - that shared
 // component's column grid is fixed at md:2/lg:4 with no count prop, and
@@ -33,7 +33,7 @@ export function Footer() {
       <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 lg:grid-cols-3 gap-10">
         <FooterColumn>
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
-            <img src={`${MEDIA}/logo.png`} alt="Judo Otoshi" className="h-28 w-28 object-contain" />
+            <img src={webp('logo.png')} alt="Judo Otoshi" width={112} height={112} className="h-28 w-28 object-contain" />
             <span className="block font-heading font-black text-white text-xl mt-3">Judo Otoshi</span>
             <p className="text-sm leading-relaxed mt-2">{t.hero.location}</p>
           </div>

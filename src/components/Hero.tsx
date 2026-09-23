@@ -4,7 +4,7 @@ import { FiMapPin, FiPhone } from 'react-icons/fi';
 import { Hero as UiHero } from '@premiummg/ui';
 import { useT } from '../lang';
 import { useLocaleHref } from '../lib/useLocaleHref';
-import { NAVY, NAVY_DARK, MEDIA, PHONE } from '../palette';
+import { NAVY, NAVY_DARK, MEDIA, webp, PHONE } from '../palette';
 
 // Hero owns its primary CTA's <button> internally - no style/className
 // passthrough reaches it, so there's no prop from this page that can recolor
@@ -44,7 +44,7 @@ export function Hero({ go }: { go: (id: string) => void }) {
         eyebrowTone="amber"
         title={t.hero.title}
         sub={t.hero.sub}
-        imageSrc={`${MEDIA}/hero-poster.jpg`}
+        imageSrc={webp('hero-poster.jpg')}
         videoSrc={`${MEDIA}/hero.mp4`}
         primaryAction={{ label: t.hero.cta, onClick: () => navigate(href('/register')) }}
         secondaryAction={{ label: t.hero.alt, onClick: () => go('programs') }}

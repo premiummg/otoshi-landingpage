@@ -6,7 +6,7 @@ import { useLocaleHref } from '../lib/useLocaleHref';
 import { COPY } from '../copy';
 import type { PageProps } from './HomePage';
 import { SubPageHeader } from '../components/SubPageHeader';
-import { BAND_GROUND, CARD_ON_GROUND, H1_INK, BODY_INK, NAVY, MEDIA } from '../palette';
+import { BAND_GROUND, CARD_ON_GROUND, H1_INK, BODY_INK, NAVY, webp } from '../palette';
 
 // Malcolm asked whether clicking a class on the main page opens a more
 // elaborate explanation "like our old website" - it didn't, so this is that
@@ -64,7 +64,7 @@ function ProgramDetail({ lang, setLang, isDark, toggleTheme }: PageProps) {
 
         <Reveal>
           <div className="mt-6 rounded-2xl overflow-hidden aspect-[16/9]">
-            <img src={`${MEDIA}/${program.img}`} alt={program.name} className="w-full h-full object-cover" />
+            <img src={webp(program.img)} alt={program.name} width={600} height={600} className="w-full h-full object-cover" />
           </div>
 
           <p className="pmg-eyebrow mt-6" style={{ color: NAVY }}>{program.ages}</p>

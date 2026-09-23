@@ -4,7 +4,7 @@ import { MediaCard, SiteButton, Reveal } from '@premiummg/ui';
 import { SectionHead } from './SectionHead';
 import { useT } from '../lang';
 import { useLocaleHref } from '../lib/useLocaleHref';
-import { NAVY, NAVY_ACCENT, MEDIA, BAND_PANEL } from '../palette';
+import { NAVY, NAVY_ACCENT, webp, BAND_PANEL } from '../palette';
 
 // Malcolm's fix, and the one item with the most day-to-day confusion behind
 // it: the live site runs six overlapping age tiers. Four tiers here, each
@@ -22,7 +22,7 @@ export function Programs({ go }: { go: (id: string) => void }) {
           {t.programs.items.map((p, i) => (
             <Reveal key={p.key} delay={i * 80}>
               <MediaCard
-                imageSrc={`${MEDIA}/${p.img}`}
+                imageSrc={webp(p.img)}
                 imageAlt={p.name}
                 title={p.name}
                 eyebrow={p.ages}

@@ -36,3 +36,14 @@ export const BODY_INK = 'text-gray-600 dark:text-gray-400';
 export const PHONE = '(438) 881-7766';
 export const EMAIL = 'judo.otoshi.dieppe@gmail.com';
 export const MEDIA = '/media';
+
+// Every photo in public/media/ also exists as a WebP, generated at the size
+// it is actually displayed - together they are 264 KB against the originals'
+// 1,077 KB, which on a phone is most of the page's image budget.
+//
+// The originals stay, and are still what `seo.ts` hands to `og:image` and to
+// the JSON-LD logo: WebP support among the social and messaging scrapers
+// that fetch those (Facebook, WhatsApp, iMessage) is still uneven, and a
+// link preview that silently loses its image is a worse trade than a few
+// KB no visitor ever downloads.
+export const webp = (file: string) => `${MEDIA}/${file.replace(/\.(jpe?g|png)$/i, '.webp')}`;

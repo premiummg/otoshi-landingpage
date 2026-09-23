@@ -3,7 +3,7 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { LanguageToggle, DarkModeToggle, type Lang } from '@premiummg/ui';
 import { useT } from '../lang';
 import { useLocaleHref } from '../lib/useLocaleHref';
-import { MEDIA, BAND_PANEL } from '../palette';
+import { webp, BAND_PANEL } from '../palette';
 
 // A compact header shared by the site's "task, not a page to browse"
 // sub-pages - the registration flow and a program's detail page - not the
@@ -20,7 +20,7 @@ export function SubPageHeader({ lang, setLang, isDark, toggleTheme }: {
       <div className="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
         <Link to={href('/')} className="flex items-center gap-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-[#14151A] dark:hover:text-white transition">
           <FiArrowLeft size={15} />
-          <img src={`${MEDIA}/logo.png`} alt="Judo Otoshi" className="h-8 w-8 object-contain" />
+          <img src={webp('logo.png')} alt="Judo Otoshi" width={32} height={32} className="h-8 w-8 object-contain" />
           <span className="hidden sm:inline">{t.register.backToSite}</span>
         </Link>
         <div className="flex items-center gap-2">

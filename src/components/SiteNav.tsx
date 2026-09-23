@@ -4,7 +4,7 @@ import { FiX, FiMenu } from 'react-icons/fi';
 import { SiteButton, LanguageToggle, DarkModeToggle, type Lang } from '@premiummg/ui';
 import { useT } from '../lang';
 import { useLocaleHref } from '../lib/useLocaleHref';
-import { GOLD, NAVY, MEDIA, BAND_PANEL } from '../palette';
+import { GOLD, NAVY, webp, BAND_PANEL } from '../palette';
 
 // A real marketing nav (logo, link row, mobile menu) - not @premiummg/ui's
 // `Navbar`, which hardcodes `PremiumLogo` and is scoped to a slim app-chrome
@@ -28,7 +28,7 @@ export function SiteNav({ lang, setLang, go, isDark, toggleTheme }: {
       <nav className={`${BAND_PANEL} border-b border-gray-100 dark:border-white/10`}>
         <div className="max-w-6xl mx-auto px-6 h-18 flex items-center justify-between gap-6">
           <button onClick={() => go('top')} className="shrink-0 flex items-center gap-2.5">
-            <img src={`${MEDIA}/logo.png`} alt="Judo Otoshi" className="h-11 w-11 object-contain" />
+            <img src={webp('logo.png')} alt="Judo Otoshi" width={44} height={44} className="h-11 w-11 object-contain" />
             <span className="font-heading font-black text-lg leading-none text-[#14151A] dark:text-white hidden sm:block">
               Judo Otoshi
             </span>
