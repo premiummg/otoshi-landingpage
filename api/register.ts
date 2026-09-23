@@ -109,10 +109,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const resend = new Resend(apiKey);
     const { error } = await resend.emails.send({
-      // Resend's own sandbox sender - works with no domain setup. Swap for
-      // a verified otoshi.ca address once the site's real domain is
-      // connected to Resend (see README).
-      from: 'Otoshi Registrations <onboarding@resend.dev>',
+      // otoshi.ca is now verified with Resend, so this can send from the
+      // real domain instead of Resend's onboarding@resend.dev sandbox
+      // sender - lets it reach any recipient, not just the Resend
+      // account's own address. No actual mailbox needs to exist for this
+      // address - a "from" address is outbound-only, the same as any
+      // no-reply@ sender.
+      from: 'Otoshi Registrations <no-reply@otoshi.ca>',
       to: TO,
       replyTo: data.parent.email,
       subject: `New registration - ${data.parent.firstName} ${data.parent.lastName}`,

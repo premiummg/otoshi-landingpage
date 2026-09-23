@@ -32,11 +32,13 @@ Variables). Without it the function returns a `500` with a clear
 sent - if a registration ever appears to succeed but never reaches the
 club's inbox, check that first.
 
-Emails currently send from Resend's own sandbox address
-(`onboarding@resend.dev`), which works with no setup. Once otoshi.ca's real
-DNS is pointed at this deployment, verify that domain with Resend too and
-switch the `from` address in `api/register.ts` to something at otoshi.ca -
-sandbox sending is fine for now but isn't meant to be permanent.
+`otoshi.ca` is verified with Resend and emails send from
+`no-reply@otoshi.ca` (no real mailbox needs to exist behind that address -
+a "from" address is outbound-only). Domain verification also lifts
+Resend's sandbox restriction that otherwise only lets an unverified
+account send test emails to its own signup address - without it, mail to
+`judo.otoshi.dieppe@gmail.com` (a different address) simply wouldn't have
+been delivered.
 
 Two things the registration form itself flags as **pending, not finished**
 (see `src/registerData.ts` and Malcolm's own email): the class-to-price
