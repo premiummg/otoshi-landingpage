@@ -1,4 +1,4 @@
-import { MAROON } from '../../palette';
+import { NAVY } from '../../palette';
 
 // A plain numbered row, not @premiummg/ui's SegmentedControl - that's a
 // mutually-exclusive CHOICE control with no ordering of its own; this one
@@ -30,7 +30,7 @@ export function StepIndicator({ steps, current, maxReached, onStepClick }: {
                 className={`w-8 h-8 rounded-full grid place-items-center text-xs font-heading font-bold transition-colors ${
                   i <= current ? 'text-white' : 'bg-gray-100 dark:bg-white/10 text-gray-400 dark:text-gray-500'
                 } ${reached && i !== current ? 'hover:opacity-80' : ''}`}
-                style={i <= current ? { backgroundColor: MAROON } : undefined}
+                style={i <= current ? { backgroundColor: NAVY } : undefined}
               >
                 {i + 1}
               </div>
@@ -42,7 +42,7 @@ export function StepIndicator({ steps, current, maxReached, onStepClick }: {
             </button>
             {i < steps.length - 1 && (
               <div className={`w-6 sm:w-12 h-0.5 rounded-full ${i < current ? '' : 'bg-gray-200 dark:bg-white/10'}`}
-                   style={i < current ? { backgroundColor: MAROON } : undefined} />
+                   style={i < current ? { backgroundColor: NAVY } : undefined} />
             )}
           </div>
         );

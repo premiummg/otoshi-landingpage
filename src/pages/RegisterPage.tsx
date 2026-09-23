@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { SiteButton } from '@premiummg/ui';
 import { useT, LangCtx } from '../lang';
@@ -11,7 +12,27 @@ import { Step2Emergency } from '../components/register/Step2Emergency';
 import { Step3Registration } from '../components/register/Step3Registration';
 import { Step4Agreements } from '../components/register/Step4Agreements';
 import { emptyRegisterForm, type Participant, type RegisterFormData } from '../registerTypes';
-import { BAND_GROUND } from '../palette';
+import { isValidEmail, isValidPhone } from '../lib/validators';
+import { BAND_GROUND, NAVY, NAVY_DARK } from '../palette';
+
+// Same CSS-custom-property override the Hero uses on the main page: SiteButton
+// resolves its fill from `var(--premium-red)`, so redefining it on a wrapper
+// swaps every default-variant button here to Otoshi's navy without touching
+// the shared package.
+const NAVY_BUTTON_OVERRIDE = { '--premium-red': NAVY, '--premium-red-dark': NAVY_DARK } as CSSProperties;
+
+// Fields render their own error via a local `Field` wrapper that marks
+// itself `data-invalid="true"` (see components/register/Field.tsx) - a
+// validation failure often lands below the fold (a step with several
+// fields, or a participant card deep in Step 3), so without this the user
+// would see nothing happen and not know why Next/Submit didn't move on.
+// Runs after the render that adds the attribute, not synchronously in the
+// same tick as the setState calls that produce it.
+function scrollToFirstError() {
+  setTimeout(() => {
+    document.querySelector('[data-invalid="true"]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 0);
+}
 
 function validateParticipant(p: Participant, required: string): Record<string, string> {
   const e: Record<string, string> = {};
@@ -56,9 +77,12 @@ function RegisterForm({ lang, setLang, isDark, toggleTheme }: PageProps) {
 
   function validateStep1() {
     const e: Record<string, string> = {};
-    if (!data.parent.fullName.trim()) e.fullName = required;
+    if (!data.parent.firstName.trim()) e.firstName = required;
+    if (!data.parent.lastName.trim()) e.lastName = required;
     if (!data.parent.email.trim()) e.email = required;
+    else if (!isValidEmail(data.parent.email)) e.email = t.register.invalidEmail;
     if (!data.parent.phone.trim()) e.phone = required;
+    else if (!isValidPhone(data.parent.phone)) e.phone = t.register.invalidPhone;
     if (!data.parent.address.trim()) e.address = required;
     if (!data.parent.city.trim()) e.city = required;
     if (!data.parent.province.trim()) e.province = required;
@@ -72,6 +96,7 @@ function RegisterForm({ lang, setLang, isDark, toggleTheme }: PageProps) {
     if (!data.emergency.name.trim()) e.name = required;
     if (!data.emergency.relationship.trim()) e.relationship = required;
     if (!data.emergency.phone.trim()) e.phone = required;
+    else if (!isValidPhone(data.emergency.phone)) e.phone = t.register.invalidPhone;
     setEmergencyErrors(e);
     return Object.keys(e).length === 0;
   }
@@ -100,6 +125,8 @@ function RegisterForm({ lang, setLang, isDark, toggleTheme }: PageProps) {
       const nextStep = Math.min(3, step + 1);
       setStep(nextStep);
       setMaxStepReached(m => Math.max(m, nextStep));
+    } else {
+      scrollToFirstError();
     }
   }
 
@@ -115,7 +142,10 @@ function RegisterForm({ lang, setLang, isDark, toggleTheme }: PageProps) {
   }
 
   async function submit() {
-    if (!validateStep4()) return;
+    if (!validateStep4()) {
+      scrollToFirstError();
+      return;
+    }
     setStatus('submitting');
     try {
       const res = await fetch('/api/register', {
@@ -132,7 +162,7 @@ function RegisterForm({ lang, setLang, isDark, toggleTheme }: PageProps) {
 
   if (status === 'success') {
     return (
-      <div className={`min-h-screen ${BAND_GROUND}`}>
+      <div className={`min-h-screen ${BAND_GROUND}`} style={NAVY_BUTTON_OVERRIDE}>
         <RegisterHeader lang={lang} setLang={setLang} isDark={isDark} toggleTheme={toggleTheme} />
         <div className="max-w-lg mx-auto px-6 py-24 text-center">
           <h1 className="font-heading font-black text-2xl text-(--premium-black) dark:text-white">{t.register.success.title}</h1>
@@ -147,7 +177,7 @@ function RegisterForm({ lang, setLang, isDark, toggleTheme }: PageProps) {
   }
 
   return (
-    <div className={`min-h-screen ${BAND_GROUND}`}>
+    <div className={`min-h-screen ${BAND_GROUND}`} style={NAVY_BUTTON_OVERRIDE}>
       <RegisterHeader lang={lang} setLang={setLang} isDark={isDark} toggleTheme={toggleTheme} />
 
       <div className="max-w-3xl mx-auto px-6 py-12">

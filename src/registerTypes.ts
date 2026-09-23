@@ -4,24 +4,27 @@
 
 export interface Participant {
   classKey: string;
-  // Independent of classKey - not yet confirmed whether Dieppe pairs each
-  // level to exactly one schedule/price or offers a choice like Riverview's
-  // old form did for some levels. See registerData.ts.
+  // Scoped to whichever class is picked - each class carries its own list of
+  // valid schedule/price options. See registerData.ts.
   scheduleKey: string;
   firstName: string;
   lastName: string;
   dob: string; // yyyy-MM-dd
   gender: 'male' | 'female' | '';
   notes: string;
+  // Adults only, ignored for kids: Malcolm confirmed parents get 50% off
+  // when the household already has a kid registered at the club.
+  parentDiscount: boolean;
 }
 
 export function emptyParticipant(): Participant {
-  return { classKey: '', scheduleKey: '', firstName: '', lastName: '', dob: '', gender: '', notes: '' };
+  return { classKey: '', scheduleKey: '', firstName: '', lastName: '', dob: '', gender: '', notes: '', parentDiscount: false };
 }
 
 export interface RegisterFormData {
   parent: {
-    fullName: string;
+    firstName: string;
+    lastName: string;
     email: string;
     phone: string;
     address: string;
@@ -44,7 +47,7 @@ export interface RegisterFormData {
 
 export function emptyRegisterForm(): RegisterFormData {
   return {
-    parent: { fullName: '', email: '', phone: '', address: '', city: '', province: '', postalCode: '' },
+    parent: { firstName: '', lastName: '', email: '', phone: '', address: '', city: '', province: '', postalCode: '' },
     emergency: { name: '', relationship: '', phone: '' },
     kidsCount: 0,
     adultsCount: 0,

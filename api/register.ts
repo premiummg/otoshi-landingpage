@@ -2,21 +2,23 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Resend } from 'resend';
 import type { RegisterFormData, Participant } from '../src/registerTypes';
 import {
-  ADULT_LEVELS, ADULT_SCHEDULES, KIDS_LEVELS, KIDS_SCHEDULES, PRICING_IS_PROVISIONAL, squareFee,
+  ADULT_LEVELS, KIDS_LEVELS, participantDiscount, participantFullPrice, participantPrice, squareFee,
 } from '../src/registerData';
+import type { ClassLevel } from '../src/registerData';
 
 const TO = 'judo.otoshi.dieppe@gmail.com';
 
-function levelName(classKey: string, levels: typeof KIDS_LEVELS) {
+function levelName(classKey: string, levels: ClassLevel[]) {
   return levels.find(l => l.key === classKey)?.name ?? classKey;
 }
 
-function scheduleInfo(scheduleKey: string, schedules: typeof KIDS_SCHEDULES) {
-  return schedules.find(sc => sc.key === scheduleKey);
+function scheduleInfo(p: Participant, levels: ClassLevel[]) {
+  return levels.find(l => l.key === p.classKey)?.schedules.find(sc => sc.key === p.scheduleKey);
 }
 
-function participantRow(p: Participant, levels: typeof KIDS_LEVELS, schedules: typeof KIDS_SCHEDULES): string {
-  const sched = scheduleInfo(p.scheduleKey, schedules);
+function participantRow(p: Participant, levels: ClassLevel[]): string {
+  const sched = scheduleInfo(p, levels);
+  const price = participantPrice(p, levels);
   return `
     <tr>
       <td style="padding:4px 8px;border:1px solid #ddd;">${p.firstName} ${p.lastName}</td>
@@ -25,14 +27,18 @@ function participantRow(p: Participant, levels: typeof KIDS_LEVELS, schedules: t
       <td style="padding:4px 8px;border:1px solid #ddd;">${p.dob}</td>
       <td style="padding:4px 8px;border:1px solid #ddd;">${p.gender}</td>
       <td style="padding:4px 8px;border:1px solid #ddd;">${p.notes || '-'}</td>
-      <td style="padding:4px 8px;border:1px solid #ddd;">$${sched?.price ?? 0}</td>
+      <td style="padding:4px 8px;border:1px solid #ddd;">$${price.toFixed(2)}${p.parentDiscount ? ' (50% parent discount)' : ''}</td>
     </tr>`;
 }
 
 function buildEmailHtml(data: RegisterFormData): string {
-  const subtotal =
-    data.kids.reduce((sum, p) => sum + (scheduleInfo(p.scheduleKey, KIDS_SCHEDULES)?.price ?? 0), 0) +
-    data.adults.reduce((sum, p) => sum + (scheduleInfo(p.scheduleKey, ADULT_SCHEDULES)?.price ?? 0), 0);
+  const fullSubtotal =
+    data.kids.reduce((sum, p) => sum + participantFullPrice(p, KIDS_LEVELS), 0) +
+    data.adults.reduce((sum, p) => sum + participantFullPrice(p, ADULT_LEVELS), 0);
+  const discount =
+    data.kids.reduce((sum, p) => sum + participantDiscount(p, KIDS_LEVELS), 0) +
+    data.adults.reduce((sum, p) => sum + participantDiscount(p, ADULT_LEVELS), 0);
+  const subtotal = fullSubtotal - discount;
   const fee = squareFee(subtotal);
   const total = subtotal + fee;
 
@@ -40,7 +46,7 @@ function buildEmailHtml(data: RegisterFormData): string {
     <h2>New Otoshi registration</h2>
     <h3>Parent / Guardian</h3>
     <p>
-      ${data.parent.fullName}<br>
+      ${data.parent.firstName} ${data.parent.lastName}<br>
       ${data.parent.email} · ${data.parent.phone}<br>
       ${data.parent.address}, ${data.parent.city}, ${data.parent.province} ${data.parent.postalCode}
     </p>
@@ -60,15 +66,15 @@ function buildEmailHtml(data: RegisterFormData): string {
         </tr>
       </thead>
       <tbody>
-        ${data.kids.map(p => participantRow(p, KIDS_LEVELS, KIDS_SCHEDULES)).join('')}
-        ${data.adults.map(p => participantRow(p, ADULT_LEVELS, ADULT_SCHEDULES)).join('')}
+        ${data.kids.map(p => participantRow(p, KIDS_LEVELS)).join('')}
+        ${data.adults.map(p => participantRow(p, ADULT_LEVELS)).join('')}
       </tbody>
     </table>
     <p>
-      Subtotal: $${subtotal.toFixed(2)}<br>
+      Subtotal: $${fullSubtotal.toFixed(2)}<br>
+      ${discount > 0 ? `Parent discount (50%): -$${discount.toFixed(2)}<br>` : ''}
       Square fee (est.): $${fee.toFixed(2)}<br>
       <strong>Total: $${total.toFixed(2)}</strong><br>
-      ${PRICING_IS_PROVISIONAL ? '<em>Pricing is provisional, pending confirmation from the club.</em><br>' : ''}
     </p>
     <p><strong>Payment not collected yet</strong> - Square isn't wired into the site until the club's
       credentials are set up. Follow up with the family directly about payment.</p>
@@ -109,7 +115,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       from: 'Otoshi Registrations <onboarding@resend.dev>',
       to: TO,
       replyTo: data.parent.email,
-      subject: `New registration - ${data.parent.fullName}`,
+      subject: `New registration - ${data.parent.firstName} ${data.parent.lastName}`,
       html: buildEmailHtml(data),
     });
     if (error) throw error;

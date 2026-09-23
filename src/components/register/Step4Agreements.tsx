@@ -1,6 +1,6 @@
 import { Card, FieldError } from '@premiummg/ui';
 import { useT } from '../../lang';
-import { MAROON } from '../../palette';
+import { NAVY } from '../../palette';
 
 function AgreementRow({ title, body, agreeLabel, checked, onChange }: {
   title: string; body: string[]; agreeLabel: string; checked: boolean; onChange: (v: boolean) => void;
@@ -27,7 +27,7 @@ function AgreementRow({ title, body, agreeLabel, checked, onChange }: {
           checked={checked}
           onChange={e => onChange(e.target.checked)}
           className="w-4 h-4 shrink-0 rounded border-gray-300 dark:border-white/25"
-          style={{ accentColor: MAROON }}
+          style={{ accentColor: NAVY }}
         />
         <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{agreeLabel}</span>
       </label>
@@ -52,9 +52,7 @@ export function Step4Agreements({ agreedJudoNb, agreedClub, setAgreedJudoNb, set
       <AgreementRow title={s.judoNbTitle} body={s.judoNbBody} agreeLabel={s.agree} checked={agreedJudoNb} onChange={setAgreedJudoNb} />
       <AgreementRow title={s.clubTitle} body={s.clubBody} agreeLabel={s.agree} checked={agreedClub} onChange={setAgreedClub} />
 
-      <p className="text-xs text-amber-600 dark:text-amber-400 italic">{s.legalEnglishOnlyNote}</p>
-
-      {error && <FieldError message={error} />}
+      {error && <div data-invalid="true"><FieldError message={error} /></div>}
     </Card>
   );
 }

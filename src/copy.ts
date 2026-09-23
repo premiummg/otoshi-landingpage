@@ -118,7 +118,8 @@ export const EN = {
     steps: ['Parent / Guardian', 'Emergency Contact', 'Registration', 'Agreements'],
     step1: {
       title: 'Parent / Guardian Information',
-      fullName: 'Full Name',
+      firstName: 'First Name',
+      lastName: 'Last Name',
       email: 'Email',
       emailHint: 'Used to send registration details and updates from the Otoshi team.',
       phone: 'Phone',
@@ -142,7 +143,9 @@ export const EN = {
       adultLabel: 'Adult',
       class: 'Class',
       chooseClass: 'Choose a class…',
+      chooseClassFirst: 'Choose a class first…',
       schedulePrice: 'Schedule & Price',
+      parentDiscount: 'I already have a child registered at the club (50% off this registration)',
       firstName: 'First Name',
       lastName: 'Last Name',
       dob: 'Date of Birth',
@@ -153,9 +156,10 @@ export const EN = {
       notesHint: 'Optional',
       atLeastOneClass: 'Select at least one class to continue.',
       subtotal: 'Subtotal',
+      parentDiscountLine: 'Parent discount (50%)',
       fee: 'Square processing fee',
       total: 'Total',
-      pricingNote: 'Provisional pricing, pending final confirmation from the club.',
+      pricingNote: 'Monthly tuition. The club will follow up separately to arrange payment through Square.',
     },
     step4: {
       title: 'Required Agreements',
@@ -173,14 +177,14 @@ export const EN = {
       clubTitle: 'Club Otoshi Waiver',
       clubBody: [
         'I understand and agree that in participating in any Judo class, workshop, rehearsal or performance, there is a possibility of physical injury or death. I voluntarily agree, therefore, to assume all risks and responsibility for any such injury or accident, which might occur to me or my child during any of OTOSHI’s classes, rehearsals, performances, or activities. I also exempt, release, and indemnify OTOSHI, its owners, agents, volunteers, assistants, employees, faculty members, and/or students from any and all liability claims, demands, or causes of action whatsoever from any damage, loss, injury, or death to me, my children, or property which may arise out of or in connection with participation in any classes or activities conducted by OTOSHI. I further hereby voluntarily agree to waive my rights and that of my heirs and assigns to hold OTOSHI, its owners, agents, volunteers, assistants, employees, faculty members, and/or students liable for such damage, loss, injury, or death. I understand that I should be aware of my physical limitations and agree not to exceed them. If I am signing this waiver for my children, I certify that I am the parent or legal guardian and have the right to waive these rights. Permission is granted to OTOSHI to use photographs of members for publicity purposes.',
-        'The novel coronavirus, COVID-19, has been declared a worldwide pandemic by the World Health Organization. COVID-19 is extremely contagious and is believed to spread mainly from person-to-person contact. As a result, federal, provincial, and local governments and federal and provincial health agencies recommend social distancing and have, in many locations, prohibited the congregation of groups of people. OTOSHI has put in place preventative measures to reduce the spread of COVID-19; however, OTOSHI cannot guarantee that you or your child(ren) will not become infected with COVID-19. Further, attending OTOSHI could increase your risk and your child(ren)’s risk of contracting COVID-19. By signing this agreement, I acknowledge the contagious nature of COVID-19 and voluntarily assume the risk that my child(ren) and I may be exposed to or infected by COVID-19 by attending OTOSHI and that such exposure or infection may result in personal injury, illness, permanent disability or death. I understand that the risk of becoming exposed to or infected by COVID-19 at OTOSHI may result from the actions, omissions, or negligence of myself and others, including, but not limited to, OTOSHI employees, instructors, and program participants and their families. I voluntarily agree to assume all of the foregoing risks and accept sole responsibility for any injury to my child(ren) or myself (including, but not limited to, personal injury, disability, and death), illness, damage, loss, claim, liability, or expense, of any kind, that I or my child(ren) may experience or incur in connection with my child(ren)’s attendance at OTOSHI Judo or participation in OTOSHI classes (“Claims”). On my behalf, and on behalf of my children, I hereby release, covenant not to sue, discharge, and hold harmless OTOSHI, its employees, agents, and representatives, of and from the Claims, including all liabilities, claims, actions, damages, costs or expenses of any kind arising out of or relating thereto. I understand and agree that this release includes any Claims based on the actions, omissions, or negligence of OTOSHI, its employees, agents, and representatives, whether a COVID-19 infection occurs before, during, or after participation in OTOSHI.',
       ],
-      legalEnglishOnlyNote: 'This legal text is currently available in English only - the same wording used on the previous registration form.',
       agree: 'I have read and agree to the above',
       mustAgree: 'Both waivers must be checked to submit your registration.',
     },
     stepNav: { next: 'Next', back: 'Back', submit: 'Submit Registration', submitting: 'Sending…' },
     required: 'This field is required.',
+    invalidEmail: 'Enter a valid email address.',
+    invalidPhone: 'Enter a valid phone number.',
     success: {
       title: 'Registration received!',
       body: 'We’ve sent your registration to the Otoshi team - they’ll be in touch shortly.',
@@ -309,7 +313,8 @@ export const FR: Copy = {
     steps: ['Parent / tuteur', 'Contact d’urgence', 'Inscription', 'Ententes'],
     step1: {
       title: 'Renseignements du parent / tuteur',
-      fullName: 'Nom complet',
+      firstName: 'Prénom',
+      lastName: 'Nom de famille',
       email: 'Courriel',
       emailHint: 'Utilisé pour envoyer les détails d’inscription et les mises à jour de l’équipe Otoshi.',
       phone: 'Téléphone',
@@ -333,7 +338,9 @@ export const FR: Copy = {
       adultLabel: 'Adulte',
       class: 'Cours',
       chooseClass: 'Choisir un cours…',
+      chooseClassFirst: 'Choisir un cours d’abord…',
       schedulePrice: 'Horaire et prix',
+      parentDiscount: 'J’ai déjà un enfant inscrit au club (50 % de rabais sur cette inscription)',
       firstName: 'Prénom',
       lastName: 'Nom de famille',
       dob: 'Date de naissance',
@@ -344,39 +351,41 @@ export const FR: Copy = {
       notesHint: 'Optionnel',
       atLeastOneClass: 'Sélectionnez au moins un cours pour continuer.',
       subtotal: 'Sous-total',
+      parentDiscountLine: 'Rabais parent (50 %)',
       fee: 'Frais de traitement Square',
       total: 'Total',
-      pricingNote: 'Tarification provisoire, en attente de confirmation finale du club.',
+      pricingNote: 'Frais mensuels. Le club communiquera séparément pour organiser le paiement via Square.',
     },
     step4: {
       title: 'Ententes requises',
-      // Legal text kept verbatim in English, same as the previous registration
-      // form's own version - not translated here, since inventing a French
-      // rendering of binding waiver language isn't something to guess at.
-      // `legalEnglishOnlyNote` below (in French) says so plainly rather than
-      // silently switching languages on the reader.
-      judoNbTitle: 'Awareness and Assumption of Risk, Release of Liability, Waiver of Claims and Indemnity Agreement',
+      // French rendering of the same waiver language as the EN version
+      // (itself verbatim from the club's previous registration form) - a
+      // careful, complete translation, not a paraphrase, since this is
+      // binding legal text. Recommend having Judo NB / the club's own
+      // French-speaking reviewer confirm the wording before this goes live,
+      // the same way Malcolm confirmed the pricing data.
+      judoNbTitle: 'Connaissance et acceptation des risques, décharge de responsabilité, renonciation aux réclamations et entente d’indemnisation',
       judoNbBody: [
-        'AWARENESS AND ASSUMPTION OF RISK',
-        'I am aware that Judo involves risks including risk of personal injury, death, property damage, expense and related loss, including loss of income. Included in these risks are negligence on the part of Judo NB, its directors, officers, staff, officials, member clubs, volunteers, Judo Canada, other participants and owners of the facilities where activities occur. I freely accept and fully assume all such risks and the possibility of personal injury, death, property damage, expense and related loss, including loss of income.',
-        'RELEASE OF LIABILITY, WAIVER OF CLAIMS AND INDEMNITY AGREEMENT',
-        'In consideration of Judo NB accepting my application to participate in Judo activities, I agree:',
-        '1. To waive any and all claims that may I have in the future against Judo NB, its directors, officers, staff, officials, member clubs, volunteers, Judo Canada, other participants and owners of the facilities where activities occur.',
-        '2. To release Judo NB, its directors, officers, staff, officials, member clubs, volunteers, Judo Canada, other participants and owners of the facilities where activities occur from any and all liability for any personal injury, death, property damage, expense and related loss, including loss of income that I or my next of kin may suffer as a result of my participation in this activity, due to any cause whatsoever, including negligence, breach of contract or breach of any statutory duty of care.',
-        '3. To hold harmless and indemnify Judo NB, its directors, officers, staff, officials, member clubs, volunteers, Judo Canada, other participants and owners of the facilities where activities occur from any and all liability for any damage to property of, or personal injury to, any third party, resulting from my participation in this activity.',
-        '4. To allow the use of my name, photographic image, and relevant personal information for the promotion of judo in the media, judo related publications & websites, and for use by governing judo associations, when deemed appropriate by Judo NB.',
+        'CONNAISSANCE ET ACCEPTATION DES RISQUES',
+        'Je suis conscient(e) que le judo comporte des risques, notamment des risques de blessure corporelle, de décès, de dommages matériels, de dépenses et de pertes connexes, y compris une perte de revenu. Ces risques comprennent la négligence de la part de Judo NB, de ses administrateurs, dirigeants, employés, officiels, clubs membres, bénévoles, de Judo Canada, des autres participants et des propriétaires des installations où se déroulent les activités. J’accepte librement et j’assume pleinement tous ces risques ainsi que la possibilité de blessure corporelle, de décès, de dommages matériels, de dépenses et de pertes connexes, y compris une perte de revenu.',
+        'DÉCHARGE DE RESPONSABILITÉ, RENONCIATION AUX RÉCLAMATIONS ET ENTENTE D’INDEMNISATION',
+        'En contrepartie de l’acceptation par Judo NB de ma demande de participation aux activités de judo, je consens à ce qui suit :',
+        '1. Renoncer à toute réclamation que je pourrais avoir dans le futur contre Judo NB, ses administrateurs, dirigeants, employés, officiels, clubs membres, bénévoles, Judo Canada, les autres participants et les propriétaires des installations où se déroulent les activités.',
+        '2. Décharger Judo NB, ses administrateurs, dirigeants, employés, officiels, clubs membres, bénévoles, Judo Canada, les autres participants et les propriétaires des installations où se déroulent les activités de toute responsabilité pour toute blessure corporelle, tout décès, tout dommage matériel, toute dépense et toute perte connexe, y compris une perte de revenu, que moi-même ou mes proches pourrions subir en raison de ma participation à cette activité, peu importe la cause, y compris la négligence, le manquement à un contrat ou le manquement à une obligation légale de diligence.',
+        '3. Tenir indemnes Judo NB, ses administrateurs, dirigeants, employés, officiels, clubs membres, bénévoles, Judo Canada, les autres participants et les propriétaires des installations où se déroulent les activités de toute responsabilité pour tout dommage matériel ou toute blessure corporelle subis par un tiers et résultant de ma participation à cette activité.',
+        '4. Permettre l’utilisation de mon nom, de mon image photographique et des renseignements personnels pertinents aux fins de la promotion du judo dans les médias, les publications et sites Web liés au judo, ainsi que par les associations de judo compétentes, lorsque Judo NB le juge approprié.',
       ],
-      clubTitle: 'Club Otoshi Waiver',
+      clubTitle: 'Décharge du Club Otoshi',
       clubBody: [
-        'I understand and agree that in participating in any Judo class, workshop, rehearsal or performance, there is a possibility of physical injury or death. I voluntarily agree, therefore, to assume all risks and responsibility for any such injury or accident, which might occur to me or my child during any of OTOSHI’s classes, rehearsals, performances, or activities. I also exempt, release, and indemnify OTOSHI, its owners, agents, volunteers, assistants, employees, faculty members, and/or students from any and all liability claims, demands, or causes of action whatsoever from any damage, loss, injury, or death to me, my children, or property which may arise out of or in connection with participation in any classes or activities conducted by OTOSHI. I further hereby voluntarily agree to waive my rights and that of my heirs and assigns to hold OTOSHI, its owners, agents, volunteers, assistants, employees, faculty members, and/or students liable for such damage, loss, injury, or death. I understand that I should be aware of my physical limitations and agree not to exceed them. If I am signing this waiver for my children, I certify that I am the parent or legal guardian and have the right to waive these rights. Permission is granted to OTOSHI to use photographs of members for publicity purposes.',
-        'The novel coronavirus, COVID-19, has been declared a worldwide pandemic by the World Health Organization. COVID-19 is extremely contagious and is believed to spread mainly from person-to-person contact. As a result, federal, provincial, and local governments and federal and provincial health agencies recommend social distancing and have, in many locations, prohibited the congregation of groups of people. OTOSHI has put in place preventative measures to reduce the spread of COVID-19; however, OTOSHI cannot guarantee that you or your child(ren) will not become infected with COVID-19. Further, attending OTOSHI could increase your risk and your child(ren)’s risk of contracting COVID-19. By signing this agreement, I acknowledge the contagious nature of COVID-19 and voluntarily assume the risk that my child(ren) and I may be exposed to or infected by COVID-19 by attending OTOSHI and that such exposure or infection may result in personal injury, illness, permanent disability or death. I understand that the risk of becoming exposed to or infected by COVID-19 at OTOSHI may result from the actions, omissions, or negligence of myself and others, including, but not limited to, OTOSHI employees, instructors, and program participants and their families. I voluntarily agree to assume all of the foregoing risks and accept sole responsibility for any injury to my child(ren) or myself (including, but not limited to, personal injury, disability, and death), illness, damage, loss, claim, liability, or expense, of any kind, that I or my child(ren) may experience or incur in connection with my child(ren)’s attendance at OTOSHI Judo or participation in OTOSHI classes (“Claims”). On my behalf, and on behalf of my children, I hereby release, covenant not to sue, discharge, and hold harmless OTOSHI, its employees, agents, and representatives, of and from the Claims, including all liabilities, claims, actions, damages, costs or expenses of any kind arising out of or relating thereto. I understand and agree that this release includes any Claims based on the actions, omissions, or negligence of OTOSHI, its employees, agents, and representatives, whether a COVID-19 infection occurs before, during, or after participation in OTOSHI.',
+        'Je comprends et j’accepte qu’en participant à tout cours, atelier, répétition ou représentation de judo, il existe une possibilité de blessure corporelle ou de décès. J’accepte donc volontairement d’assumer tous les risques et toute la responsabilité pour toute blessure ou tout accident pouvant survenir à moi-même ou à mon enfant durant les cours, répétitions, représentations ou activités d’OTOSHI. J’exempte, décharge et tiens également indemnes OTOSHI, ses propriétaires, agents, bénévoles, assistants, employés, membres du corps enseignant et/ou étudiants de toute réclamation de responsabilité, demande ou cause d’action, quelle qu’elle soit, découlant de tout dommage, perte, blessure ou décès me touchant, touchant mes enfants ou touchant des biens, pouvant résulter de la participation à des cours ou activités organisés par OTOSHI ou y étant liés. Je consens en outre volontairement à renoncer à mes droits et à ceux de mes héritiers et ayants droit de tenir OTOSHI, ses propriétaires, agents, bénévoles, assistants, employés, membres du corps enseignant et/ou étudiants responsables d’un tel dommage, d’une telle perte, blessure ou d’un tel décès. Je comprends que je dois être conscient(e) de mes limites physiques et je m’engage à ne pas les dépasser. Si je signe cette décharge au nom de mes enfants, je certifie être le parent ou le tuteur ou la tutrice légal(e) et avoir le droit de renoncer à ces droits en leur nom. La permission est accordée à OTOSHI d’utiliser des photographies des membres à des fins publicitaires.',
       ],
-      legalEnglishOnlyNote: 'Ce texte légal est actuellement disponible en anglais seulement - le même texte utilisé sur l’ancien formulaire d’inscription.',
       agree: 'J’ai lu et j’accepte ce qui précède',
       mustAgree: 'Les deux décharges doivent être cochées pour soumettre votre inscription.',
     },
     stepNav: { next: 'Suivant', back: 'Retour', submit: 'Soumettre l’inscription', submitting: 'Envoi en cours…' },
     required: 'Ce champ est requis.',
+    invalidEmail: 'Entrez une adresse courriel valide.',
+    invalidPhone: 'Entrez un numéro de téléphone valide.',
     success: {
       title: 'Inscription reçue!',
       body: 'Nous avons envoyé votre inscription à l’équipe d’Otoshi - elle communiquera avec vous sous peu.',

@@ -26,7 +26,10 @@ function FooterColumn({ label, children }: { label?: string; children: React.Rea
 export function Footer() {
   const t = useT();
   return (
-    <footer className="bg-(--premium-black) text-white/70">
+    // id="contact": the navbar's "Contact Us" link scrolls here - this is
+    // where the phone/email/hours/social links actually live, there's no
+    // separate contact section on the page.
+    <footer id="contact" className="bg-(--premium-black) text-white/70">
       <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 lg:grid-cols-3 gap-10">
         <FooterColumn>
           <div className="flex flex-col items-center text-center md:items-start md:text-left">

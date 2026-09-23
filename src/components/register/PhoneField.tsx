@@ -1,9 +1,11 @@
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 
-// Same library, same `.phone-input-field` class and defaultCountry="CA" as
-// timesheet-payroll-system's own ProfilePage.tsx - as-you-type formatting
-// for a real phone number instead of a plain text box.
+// Same library and `.phone-input-field` class as timesheet-payroll-system's
+// own ProfilePage.tsx - as-you-type formatting for a real phone number
+// instead of a plain text box. No `international` prop: with a country
+// selected (defaulting to CA), the library formats in that country's own
+// national style - "(506) 555-1234" - instead of "+1 506 555 1234".
 export function PhoneField({ id, value, onChange }: {
   id: string;
   value: string;
@@ -12,7 +14,6 @@ export function PhoneField({ id, value, onChange }: {
   return (
     <PhoneInput
       id={id}
-      international
       defaultCountry="CA"
       value={value}
       onChange={v => onChange(v ?? '')}

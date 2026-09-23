@@ -39,10 +39,16 @@ export function Step1Parent({ data, setData, errors }: {
     <Card padding className="space-y-5">
       <h2 className="font-heading font-extrabold text-lg text-(--premium-black) dark:text-white">{s.title}</h2>
 
-      <Field label={s.fullName} htmlFor="p-fullName" required error={errors.fullName}>
-        <input id="p-fullName" data-1p-ignore className="input-field" value={data.parent.fullName}
-               onChange={e => set('fullName', e.target.value)} />
-      </Field>
+      <div className="grid sm:grid-cols-2 gap-5">
+        <Field label={s.firstName} htmlFor="p-firstName" required error={errors.firstName}>
+          <input id="p-firstName" data-1p-ignore className="input-field" value={data.parent.firstName}
+                 onChange={e => set('firstName', e.target.value)} />
+        </Field>
+        <Field label={s.lastName} htmlFor="p-lastName" required error={errors.lastName}>
+          <input id="p-lastName" data-1p-ignore className="input-field" value={data.parent.lastName}
+                 onChange={e => set('lastName', e.target.value)} />
+        </Field>
+      </div>
 
       <Field label={s.email} htmlFor="p-email" required error={errors.email}>
         <EmailAutocomplete id="p-email" value={data.parent.email} onChange={v => set('email', v)} />
