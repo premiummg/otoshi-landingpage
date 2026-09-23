@@ -1,10 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Resend } from 'resend';
-import type { RegisterFormData, Participant } from '../src/registerTypes';
+import type { RegisterFormData, Participant } from '../src/registerTypes.js';
 import {
   ADULT_LEVELS, KIDS_LEVELS, participantDiscount, participantFullPrice, participantPrice, squareFee,
-} from '../src/registerData';
-import type { ClassLevel } from '../src/registerData';
+} from '../src/registerData.js';
+import type { ClassLevel } from '../src/registerData.js';
 
 const TO = 'judo.otoshi.dieppe@gmail.com';
 
