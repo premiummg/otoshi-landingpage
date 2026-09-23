@@ -46,7 +46,22 @@ export function SiteNav({ lang, setLang, go, isDark, toggleTheme }: {
               names={{ en: 'English', fr: 'Français' }}
             />
             <DarkModeToggle isDark={isDark} onToggle={toggleTheme} size={17} />
-            <SiteButton onClick={() => navigate('/register')} style={{ backgroundColor: NAVY }} className="px-4! py-2.5! hidden sm:inline-flex">
+            {/* Hidden until `lg` (matching the full nav-link row above), not
+                `sm` - LanguageToggle always renders both flags+labels with
+                no compact mode, and the French CTA text ("Joindre le Club
+                Otoshi") is long enough that showing this alongside the
+                toggle, dark-mode button, and hamburger overflowed the row
+                horizontally on narrower screens. The hamburger's own open
+                menu already has a full-width CTA, so nothing is lost below
+                `lg`.
+                `hidden!`, not plain `hidden` - SiteButton's own base class
+                list already includes an unconditional `inline-flex`, which
+                the compiled stylesheet happens to declare AFTER `.hidden`;
+                equal specificity plus later source order meant that base
+                `inline-flex` was silently winning the cascade at every
+                width, so `hidden` never actually did anything. `!important`
+                forces it through regardless of generated rule order. */}
+            <SiteButton onClick={() => navigate('/register')} style={{ backgroundColor: NAVY }} className="px-4! py-2.5! hidden! lg:inline-flex">
               {t.nav.cta}
             </SiteButton>
             <button onClick={() => setOpenMenu(o => !o)} aria-label="Menu"

@@ -35,26 +35,64 @@ export const EN = {
       },
     ],
   },
-  why: {
-    eyebrow: 'Why families choose Otoshi',
-    title: 'The right guide for your family.',
-    stats: [
-      { value: '78%', label: 'Self-confidence' },
-      { value: '78%', label: 'Social skills (youth)' },
-      { value: '56%', label: 'Openness' },
-    ],
-    footnote: 'IJF studies show that judo builds youth confidence, social skills, and personal growth.',
-  },
   programs: {
     eyebrow: 'Judo Classes',
     title: 'A class for every age and skill level.',
+    // `long`/`classNames` are new, written for the click-through detail page
+    // Malcolm asked about ("like our old website") - the old site is now a
+    // private WordPress.com install with no public content left to pull
+    // from, so this is fresh copy rather than a recovered original. Worth a
+    // pass from Malcolm before it's final, same as the pricing data was.
+    // `classNames` links a program to its rows in `schedule.days` (by class
+    // name) so the detail page can show exactly when it meets without a
+    // second, hand-maintained copy of the schedule.
     items: [
-      { key: 'beginner', img: 'Beginner.jpg', name: 'Beginner', ages: 'Ages 6–13', body: 'New to judo. Falling safely, balance, and the first throws, in a structured and encouraging class.' },
-      { key: 'intermediate', img: 'Intermediates-regular.jpg', name: 'Intermediate', ages: 'Ages 8–13', body: 'A few years of experience. Building technique and ring craft toward the next belt.' },
-      { key: 'elite', img: 'Elites.jpg', name: 'Elite', ages: 'Ages 13+', body: 'The competitive program, for judoka training toward tournaments and provincial standards.' },
-      { key: 'adult', img: 'Adults.jpg', name: 'Adult', ages: 'Ages 14+', body: 'All levels welcomed. Strength, discipline, and real self-defense, on your own schedule.' },
+      {
+        key: 'beginner', img: 'Beginner.jpg', name: 'Beginner', ages: 'Ages 6–13',
+        body: 'New to judo. Falling safely, balance, and the first throws, in a structured and encouraging class.',
+        long: [
+          'Beginner is where every young judoka starts: classes built around the fundamentals that keep training safe and fun from day one - how to fall without fear, balance, grip, and the first few throws.',
+          'Classes are split into two groups (Beginners A and B) so instructors can keep a close eye on technique at this stage, with an emphasis on discipline, respect, and the confidence that comes from getting a new skill right for the first time.',
+        ],
+        classNames: ['Beginners A', 'Beginners B'],
+      },
+      {
+        key: 'intermediate', img: 'Intermediates-regular.jpg', name: 'Intermediate', ages: 'Ages 8–13',
+        body: 'A few years of experience. Building technique and ring craft toward the next belt.',
+        long: [
+          'Intermediate builds on the fundamentals from Beginner with a wider technical vocabulary - throws, groundwork (newaza), and the tactical sense that turns individual moves into a real judo game.',
+          'Students train in two groups (Intermediates A and B), with an optional third weekly session and a conditioning add-on for judoka preparing for their next belt or their first tournaments.',
+        ],
+        classNames: ['Intermediates A', 'Intermediates B'],
+      },
+      {
+        key: 'elite', img: 'Elites.jpg', name: 'Elite', ages: 'Ages 13+',
+        body: 'The competitive program, for judoka training toward tournaments and provincial standards.',
+        long: [
+          'Elite is the club’s competitive program, for judoka training toward tournaments and provincial standards. Technical work, live randori, and strategy build the conditioning and ring craft competition demands.',
+          'Optional conditioning sessions (one or two extra per week) are available for athletes preparing for a heavier competition schedule.',
+        ],
+        classNames: ['Elites'],
+      },
+      {
+        key: 'adult', img: 'Adults.jpg', name: 'Adult', ages: 'Ages 14+',
+        body: 'All levels welcomed. Strength, discipline, and real self-defense, on your own schedule.',
+        long: [
+          'Adult welcomes every level, from a first-timer walking onto the mat to someone returning to the sport after years away. Classes cover real self-defense, judo’s throws and groundwork, and a serious workout, at whatever pace fits you.',
+          'Parents who already have a kid registered at the club get 50% off their own Adult registration.',
+        ],
+        classNames: ['Adults/Teens'],
+      },
     ],
     trial: { title: 'Just getting started?', body: 'Step onto the mat with a free trial and discover Otoshi Judo.', cta: 'Step Onto the Mat' },
+    detail: {
+      backToPrograms: 'Back to classes',
+      whenItMeets: 'When it meets',
+      whatToExpect: 'What to expect',
+      cta: 'Register for this class',
+      notFoundTitle: 'Class not found',
+      notFoundBody: 'We couldn’t find that class. Take a look at the full list instead.',
+    },
   },
   who: {
     eyebrow: 'Who we are',
@@ -69,17 +107,51 @@ export const EN = {
     title: 'Class schedule – Dieppe',
     jumpCta: 'Find Class Times',
     address: '1571 Melanson Rd, Dieppe, NB',
-    rows: [
-      { day: 'Mon – Fri', time: '7:00 – 8:00 am', level: 'Morning conditioning' },
-      { day: 'Mon – Fri', time: '3:00 – 4:30 pm', level: 'Student-athlete program' },
-      { day: 'Mon – Fri', time: '5:00 – 7:00 pm', level: 'Beginner' },
-      { day: 'Mon – Fri', time: '5:00 – 7:30 pm', level: 'Intermediate A & B' },
-      { day: 'Mon – Fri', time: '7:00 – 9:00 pm', level: 'Elite training' },
-      { day: 'Mon – Fri', time: '7:30 – 9:00 pm', level: 'Adult / Teen' },
-      { day: 'Saturday', time: '9:00 – 9:45 am', level: 'Ninja (ages 4–6)' },
-      { day: 'Saturday', time: '10:00 am – 12:00 pm', level: 'Advanced' },
+    closedLabel: 'Closed',
+    // Malcolm's fix: day-by-day, from the club's own 2026-2027 activities
+    // calendar he sent as reference - not the old "Mon-Fri" summary rows,
+    // which he flagged as hard to follow.
+    days: [
+      { day: 'Sunday', classes: [] },
+      { day: 'Monday', classes: [
+        { time: '7:00 – 8:00 am', name: 'Conditioning' },
+        { time: '3:00 – 4:30 pm', name: 'Student-Athlete Program' },
+        { time: '5:00 – 6:15 pm', name: 'Intermediates A' },
+        { time: '6:15 – 7:30 pm', name: 'Intermediates B' },
+        { time: '7:30 – 9:00 pm', name: 'Adults/Teens' },
+      ] },
+      { day: 'Tuesday', classes: [
+        { time: '5:00 – 6:00 pm', name: 'Beginners A' },
+        { time: '6:00 – 7:00 pm', name: 'Beginners B' },
+        { time: '7:00 – 9:00 pm', name: 'Elites' },
+      ] },
+      { day: 'Wednesday', classes: [
+        { time: '7:00 – 8:00 am', name: 'Intro to Conditioning' },
+        { time: '3:00 – 4:30 pm', name: 'Student-Athlete Program' },
+        { time: '5:00 – 6:15 pm', name: 'Intermediates A' },
+        { time: '6:15 – 7:30 pm', name: 'Intermediates B' },
+        { time: '7:30 – 9:00 pm', name: 'Adults/Teens' },
+      ] },
+      { day: 'Thursday', classes: [
+        { time: '5:00 – 6:00 pm', name: 'Beginners A' },
+        { time: '6:00 – 7:00 pm', name: 'Beginners B' },
+        { time: '7:00 – 9:00 pm', name: 'Elites' },
+      ] },
+      { day: 'Friday', classes: [
+        { time: '7:00 – 8:00 am', name: 'Conditioning' },
+        { time: '5:00 – 6:15 pm', name: 'Intermediates A' },
+        { time: '6:15 – 7:30 pm', name: 'Intermediates B' },
+        { time: '7:30 – 9:00 pm', name: 'Elites' },
+      ] },
+      { day: 'Saturday', classes: [
+        { time: '9:00 – 9:45 am', name: 'Ninja' },
+        { time: '10:00 am – 12:00 pm', name: 'Advanced' },
+      ] },
     ],
-    footnote: 'Ninja is the early pathway into Beginner – the same mat, a gentler pace.',
+    notes: [
+      'There is no break between classes - please exit the mats as soon as your class ends.',
+      'The dojo operates on a regular basis for most holidays. Follow us on Facebook and Instagram for closure announcements.',
+    ],
   },
   judoForAll: {
     eyebrow: 'Judo For All',
@@ -230,26 +302,56 @@ export const FR: Copy = {
       },
     ],
   },
-  why: {
-    eyebrow: 'Pourquoi les familles choisissent Otoshi',
-    title: 'La bonne voie pour votre famille.',
-    stats: [
-      { value: '78%', label: 'Confiance en soi' },
-      { value: '78%', label: 'Habiletés sociales (jeunesse)' },
-      { value: '56%', label: 'Ouverture d’esprit' },
-    ],
-    footnote: 'Des études de la FIJ démontrent que le judo développe la confiance, les habiletés sociales et la croissance personnelle des jeunes.',
-  },
   programs: {
     eyebrow: 'Cours de judo',
     title: 'Un cours pour chaque âge et chaque niveau.',
     items: [
-      { key: 'beginner', img: 'Beginner.jpg', name: 'Débutant', ages: 'De 6 à 13 ans', body: 'Nouveau au judo. Bien tomber, l’équilibre et les premières projections, dans un cours structuré et encourageant.' },
-      { key: 'intermediate', img: 'Intermediates-regular.jpg', name: 'Intermédiaire', ages: 'De 8 à 13 ans', body: 'Quelques années d’expérience. On développe la technique et le sens du combat vers la prochaine ceinture.' },
-      { key: 'elite', img: 'Elites.jpg', name: 'Élite', ages: '13 ans et plus', body: 'Le programme compétitif, pour les judokas qui s’entraînent vers les tournois et les standards provinciaux.' },
-      { key: 'adult', img: 'Adults.jpg', name: 'Adulte', ages: '14 ans et plus', body: 'Tous les niveaux sont bienvenus. Force, discipline et défense personnelle réelle, selon votre horaire.' },
+      {
+        key: 'beginner', img: 'Beginner.jpg', name: 'Débutant', ages: 'De 6 à 13 ans',
+        body: 'Nouveau au judo. Bien tomber, l’équilibre et les premières projections, dans un cours structuré et encourageant.',
+        long: [
+          'Débutant est le point de départ de chaque jeune judoka : des cours bâtis autour des bases qui rendent l’entraînement sécuritaire et amusant dès le premier jour, soit bien tomber sans crainte, l’équilibre, la prise et les premières projections.',
+          'Les cours sont divisés en deux groupes (Débutants A et B) afin que les instructeurs puissent suivre de près la technique à cette étape, avec un accent sur la discipline, le respect et la confiance que procure la réussite d’une nouvelle habileté pour la première fois.',
+        ],
+        classNames: ['Débutants A', 'Débutants B'],
+      },
+      {
+        key: 'intermediate', img: 'Intermediates-regular.jpg', name: 'Intermédiaire', ages: 'De 8 à 13 ans',
+        body: 'Quelques années d’expérience. On développe la technique et le sens du combat vers la prochaine ceinture.',
+        long: [
+          'Intermédiaire s’appuie sur les bases de Débutant avec un vocabulaire technique plus large : projections, travail au sol (newaza) et sens tactique qui transforme des mouvements isolés en un vrai combat de judo.',
+          'Les élèves s’entraînent en deux groupes (Intermédiaires A et B), avec une troisième séance hebdomadaire optionnelle et un ajout de conditionnement pour les judokas qui se préparent pour leur prochaine ceinture ou leurs premiers tournois.',
+        ],
+        classNames: ['Intermédiaires A', 'Intermédiaires B'],
+      },
+      {
+        key: 'elite', img: 'Elites.jpg', name: 'Élite', ages: '13 ans et plus',
+        body: 'Le programme compétitif, pour les judokas qui s’entraînent vers les tournois et les standards provinciaux.',
+        long: [
+          'Élite est le programme compétitif du club, pour les judokas qui s’entraînent vers les tournois et les standards provinciaux. Travail technique, randori en direct et stratégie développent la condition physique et le sens du combat qu’exige la compétition.',
+          'Des séances de conditionnement optionnelles (une ou deux de plus par semaine) sont offertes aux athlètes qui se préparent pour un horaire de compétition plus chargé.',
+        ],
+        classNames: ['Élites'],
+      },
+      {
+        key: 'adult', img: 'Adults.jpg', name: 'Adulte', ages: '14 ans et plus',
+        body: 'Tous les niveaux sont bienvenus. Force, discipline et défense personnelle réelle, selon votre horaire.',
+        long: [
+          'Adulte accueille tous les niveaux, du débutant qui monte sur le tatami pour la première fois à celui qui revient au sport après plusieurs années d’absence. Les cours couvrent la vraie défense personnelle, les projections et le travail au sol du judo, ainsi qu’un entraînement sérieux, selon votre propre rythme.',
+          'Les parents qui ont déjà un enfant inscrit au club obtiennent 50 % de rabais sur leur propre inscription Adulte.',
+        ],
+        classNames: ['Adultes/Ados'],
+      },
     ],
     trial: { title: 'Vous débutez?', body: 'Montez sur le tatami avec un cours d’essai gratuit et découvrez Judo Otoshi.', cta: 'Montez sur le tatami' },
+    detail: {
+      backToPrograms: 'Retour aux cours',
+      whenItMeets: 'Horaire de ce cours',
+      whatToExpect: 'À quoi s’attendre',
+      cta: 'S’inscrire à ce cours',
+      notFoundTitle: 'Cours introuvable',
+      notFoundBody: 'Nous n’avons pas trouvé ce cours. Consultez plutôt la liste complète.',
+    },
   },
   who: {
     eyebrow: 'Qui nous sommes',
@@ -264,17 +366,48 @@ export const FR: Copy = {
     title: 'Horaire des cours – Dieppe',
     jumpCta: 'Trouver l’horaire',
     address: '1571, chemin Melanson, Dieppe (N.-B.)',
-    rows: [
-      { day: 'Lun – Ven', time: '7 h – 8 h', level: 'Conditionnement matinal' },
-      { day: 'Lun – Ven', time: '15 h – 16 h 30', level: 'Programme étudiant-athlète' },
-      { day: 'Lun – Ven', time: '17 h – 19 h', level: 'Débutant' },
-      { day: 'Lun – Ven', time: '17 h – 19 h 30', level: 'Intermédiaire A et B' },
-      { day: 'Lun – Ven', time: '19 h – 21 h', level: 'Entraînement élite' },
-      { day: 'Lun – Ven', time: '19 h 30 – 21 h', level: 'Adulte / Ado' },
-      { day: 'Samedi', time: '9 h – 9 h 45', level: 'Ninja (4 à 6 ans)' },
-      { day: 'Samedi', time: '10 h – 12 h', level: 'Avancé' },
+    closedLabel: 'Fermé',
+    days: [
+      { day: 'Dimanche', classes: [] },
+      { day: 'Lundi', classes: [
+        { time: '7 h – 8 h', name: 'Conditionnement' },
+        { time: '15 h – 16 h 30', name: 'Programme étudiant-athlète' },
+        { time: '17 h – 18 h 15', name: 'Intermédiaires A' },
+        { time: '18 h 15 – 19 h 30', name: 'Intermédiaires B' },
+        { time: '19 h 30 – 21 h', name: 'Adultes/Ados' },
+      ] },
+      { day: 'Mardi', classes: [
+        { time: '17 h – 18 h', name: 'Débutants A' },
+        { time: '18 h – 19 h', name: 'Débutants B' },
+        { time: '19 h – 21 h', name: 'Élites' },
+      ] },
+      { day: 'Mercredi', classes: [
+        { time: '7 h – 8 h', name: 'Introduction au conditionnement' },
+        { time: '15 h – 16 h 30', name: 'Programme étudiant-athlète' },
+        { time: '17 h – 18 h 15', name: 'Intermédiaires A' },
+        { time: '18 h 15 – 19 h 30', name: 'Intermédiaires B' },
+        { time: '19 h 30 – 21 h', name: 'Adultes/Ados' },
+      ] },
+      { day: 'Jeudi', classes: [
+        { time: '17 h – 18 h', name: 'Débutants A' },
+        { time: '18 h – 19 h', name: 'Débutants B' },
+        { time: '19 h – 21 h', name: 'Élites' },
+      ] },
+      { day: 'Vendredi', classes: [
+        { time: '7 h – 8 h', name: 'Conditionnement' },
+        { time: '17 h – 18 h 15', name: 'Intermédiaires A' },
+        { time: '18 h 15 – 19 h 30', name: 'Intermédiaires B' },
+        { time: '19 h 30 – 21 h', name: 'Élites' },
+      ] },
+      { day: 'Samedi', classes: [
+        { time: '9 h – 9 h 45', name: 'Ninja' },
+        { time: '10 h – 12 h', name: 'Avancé' },
+      ] },
     ],
-    footnote: 'Ninja est la voie d’entrée vers Débutant – le même tatami, un rythme plus doux.',
+    notes: [
+      'Il n’y a pas de pause entre les cours - veuillez quitter le tatami dès la fin de votre cours.',
+      'Le dojo est ouvert de façon régulière pendant la plupart des congés. Suivez-nous sur Facebook et Instagram pour les annonces de fermeture.',
+    ],
   },
   judoForAll: {
     eyebrow: 'Judo pour tous',

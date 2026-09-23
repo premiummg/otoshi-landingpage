@@ -1,14 +1,15 @@
 import { Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import { LanguageToggle, DarkModeToggle, type Lang } from '@premiummg/ui';
-import { useT } from '../../lang';
-import { MEDIA, BAND_PANEL } from '../../palette';
+import { useT } from '../lang';
+import { MEDIA, BAND_PANEL } from '../palette';
 
-// A compact header for the registration flow - not the full marketing
-// SiteNav (no link row, no mobile menu): a form collecting a family's
-// personal info and a payment total is a task to finish, not a page to
-// browse, so nothing here invites wandering off to another section.
-export function RegisterHeader({ lang, setLang, isDark, toggleTheme }: {
+// A compact header shared by the site's "task, not a page to browse"
+// sub-pages - the registration flow and a program's detail page - not the
+// full marketing SiteNav (no link row, no mobile menu): both are single
+// tasks to finish (register, or read about one class) rather than
+// somewhere that invites wandering off to another section.
+export function SubPageHeader({ lang, setLang, isDark, toggleTheme }: {
   lang: Lang; setLang: (l: Lang) => void; isDark: boolean; toggleTheme: () => void;
 }) {
   const t = useT();

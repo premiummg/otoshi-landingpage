@@ -5,7 +5,7 @@ import { SiteButton } from '@premiummg/ui';
 import { useT, LangCtx } from '../lang';
 import { COPY } from '../copy';
 import type { PageProps } from './HomePage';
-import { RegisterHeader } from '../components/register/RegisterHeader';
+import { SubPageHeader } from '../components/SubPageHeader';
 import { StepIndicator } from '../components/register/StepIndicator';
 import { Step1Parent } from '../components/register/Step1Parent';
 import { Step2Emergency } from '../components/register/Step2Emergency';
@@ -163,7 +163,7 @@ function RegisterForm({ lang, setLang, isDark, toggleTheme }: PageProps) {
   if (status === 'success') {
     return (
       <div className={`min-h-screen ${BAND_GROUND}`} style={NAVY_BUTTON_OVERRIDE}>
-        <RegisterHeader lang={lang} setLang={setLang} isDark={isDark} toggleTheme={toggleTheme} />
+        <SubPageHeader lang={lang} setLang={setLang} isDark={isDark} toggleTheme={toggleTheme} />
         <div className="max-w-lg mx-auto px-6 py-24 text-center">
           <h1 className="font-heading font-black text-2xl text-(--premium-black) dark:text-white">{t.register.success.title}</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-3 leading-relaxed">{t.register.success.body}</p>
@@ -178,7 +178,7 @@ function RegisterForm({ lang, setLang, isDark, toggleTheme }: PageProps) {
 
   return (
     <div className={`min-h-screen ${BAND_GROUND}`} style={NAVY_BUTTON_OVERRIDE}>
-      <RegisterHeader lang={lang} setLang={setLang} isDark={isDark} toggleTheme={toggleTheme} />
+      <SubPageHeader lang={lang} setLang={setLang} isDark={isDark} toggleTheme={toggleTheme} />
 
       <div className="max-w-3xl mx-auto px-6 py-12">
         <h1 className="font-heading font-black text-2xl text-(--premium-black) dark:text-white text-center mb-8">

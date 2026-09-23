@@ -74,7 +74,9 @@ export function Footer() {
               artwork should be pinned to the dark variant rather than
               watching html.dark (which tracks the PAGE's theme, not this
               section's fixed one). */}
-          <PremiumLogo variant="horizontal" mode="dark" size="sm" />
+          <a href="https://premiummg.ca/" target="_blank" rel="noreferrer" className="inline-block cursor-pointer hover:opacity-80 transition">
+            <PremiumLogo variant="horizontal" mode="dark" size="sm" />
+          </a>
         </FooterColumn>
       </div>
 

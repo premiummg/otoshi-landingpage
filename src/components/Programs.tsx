@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { FiArrowRight } from 'react-icons/fi';
 import { MediaCard, SiteButton, Reveal } from '@premiummg/ui';
 import { SectionHead } from './SectionHead';
@@ -10,6 +11,7 @@ import { NAVY, NAVY_ACCENT, MEDIA, BAND_PANEL } from '../palette';
 // the others.
 export function Programs({ go }: { go: (id: string) => void }) {
   const t = useT();
+  const navigate = useNavigate();
   return (
     <section id="programs" className={BAND_PANEL}>
       <div className="max-w-6xl mx-auto px-6 py-20 md:py-24">
@@ -23,7 +25,7 @@ export function Programs({ go }: { go: (id: string) => void }) {
                 title={p.name}
                 eyebrow={p.ages}
                 eyebrowColor={NAVY_ACCENT}
-                onClick={() => go('contact')}
+                onClick={() => navigate(`/programs/${p.key}`)}
               >
                 {p.body}
               </MediaCard>

@@ -3,7 +3,6 @@ import type { Lang } from '../copy';
 import { SiteNav } from '../components/SiteNav';
 import { Hero } from '../components/Hero';
 import { Community } from '../components/Community';
-import { Why } from '../components/Why';
 import { Programs } from '../components/Programs';
 import { Who } from '../components/Who';
 import { Schedule } from '../components/Schedule';
@@ -39,7 +38,10 @@ export function HomePage({ lang, setLang, isDark, toggleTheme }: PageProps) {
       <BackToTop go={go} />
       <Hero go={go} />
       <Community />
-      <Why />
+      {/* Malcolm's fix: the "78% confidence / 78% social skills / 56%
+          openness" stat band used to sit here - he asked for it removed
+          ("makes us look terrible and it's unnecessary"), so it's gone
+          entirely rather than kept with the numbers stripped out. */}
       <Programs go={go} />
       <Who />
       <Schedule go={go} />
