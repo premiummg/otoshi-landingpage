@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# /api/register only answers POST from the registration form - there is
+# nothing for a crawler to index behind it, and a crawled GET just returns 405.
+Disallow: /api/
+
+Sitemap: https://otoshi.ca/sitemap.xml

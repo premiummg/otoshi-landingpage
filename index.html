@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,20 +11,24 @@
      old one. -->
 <link rel="icon" type="image/png" href="/media/logo.png?v=2">
 <link rel="apple-touch-icon" href="/media/logo.png?v=2">
-<title>Judo Otoshi</title>
-<meta name="description" content="Judo Otoshi - Dieppe, NB. Judo classes for kids, teens and adults, coached since 2012. Free trial class, no obligation.">
 <meta name="theme-color" content="#1A2C6E">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Judo Otoshi">
-<meta property="og:title" content="Judo Otoshi - Dieppe, NB">
-<meta property="og:description" content="Find unbreakable confidence and focus, one belt at a time. Judo classes for kids, teens and adults in Dieppe.">
-<meta property="og:image" content="/media/hero-poster.jpg">
-<meta property="og:locale" content="fr_CA">
-<meta property="og:locale:alternate" content="en_CA">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Judo Otoshi - Dieppe, NB">
-<meta name="twitter:description" content="Find unbreakable confidence and focus, one belt at a time.">
-<meta name="twitter:image" content="/media/hero-poster.jpg">
+<!-- max-image-preview:large opts the club's photos into full-size thumbnails
+     in Google results instead of the default postage stamp - for a local
+     sports club the photo is most of what makes the listing worth clicking. -->
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<!-- The hero image is the largest element painted above the fold, so it is
+     what Largest Contentful Paint is measured against. Preloading it starts
+     the download alongside the JS bundle rather than after the component
+     that references it has mounted. -->
+<link rel="preload" as="image" href="/media/hero-poster.jpg" fetchpriority="high">
+<!-- Everything between these markers is replaced per route at build time by
+     scripts/prerender.mjs (title, description, canonical, hreflang, Open
+     Graph, JSON-LD). What is written here is only what `vite dev` shows,
+     since dev never runs the prerender step. -->
+<!--seo-start-->
+<title>Judo Classes in Dieppe &amp; Moncton, NB | Judo Otoshi</title>
+<meta name="description" content="Judo for kids, teens and adults in Dieppe, NB. Certified senseis and classes for ages 4 and up, serving Greater Moncton since 2012. Free trial class.">
+<!--seo-end-->
 <script>
   (function () {
     var saved = localStorage.getItem('theme');
@@ -36,7 +40,7 @@
 </script>
 </head>
 <body>
-<div id="root"></div>
+<div id="root"><!--app-html--></div>
 <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>

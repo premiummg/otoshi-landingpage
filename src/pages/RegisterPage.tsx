@@ -13,6 +13,7 @@ import { Step3Registration } from '../components/register/Step3Registration';
 import { Step4Agreements } from '../components/register/Step4Agreements';
 import { emptyRegisterForm, type Participant, type RegisterFormData } from '../registerTypes';
 import { isValidEmail, isValidPhone } from '../lib/validators';
+import { useLocaleHref } from '../lib/useLocaleHref';
 import { BAND_GROUND, NAVY, NAVY_DARK } from '../palette';
 
 // Same CSS-custom-property override the Hero uses on the main page: SiteButton
@@ -59,6 +60,7 @@ export function RegisterPage({ lang, setLang, isDark, toggleTheme }: PageProps) 
 
 function RegisterForm({ lang, setLang, isDark, toggleTheme }: PageProps) {
   const t = useT();
+  const href = useLocaleHref();
   const [step, setStep] = useState(0);
   // The furthest step reached so far - StepIndicator only lets a click jump
   // to a step at or before this one, so re-visiting step 1 to fix a typo
@@ -168,7 +170,7 @@ function RegisterForm({ lang, setLang, isDark, toggleTheme }: PageProps) {
           <h1 className="font-heading font-black text-2xl text-(--premium-black) dark:text-white">{t.register.success.title}</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-3 leading-relaxed">{t.register.success.body}</p>
           <p className="text-sm text-amber-600 dark:text-amber-400 mt-4 leading-relaxed">{t.register.success.paymentNote}</p>
-          <Link to="/" className="inline-block mt-8">
+          <Link to={href('/')} className="inline-block mt-8">
             <SiteButton>{t.register.success.backHome}</SiteButton>
           </Link>
         </div>

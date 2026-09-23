@@ -2,6 +2,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FiArrowLeft, FiClock } from 'react-icons/fi';
 import { SiteButton, Reveal } from '@premiummg/ui';
 import { useT, LangCtx } from '../lang';
+import { useLocaleHref } from '../lib/useLocaleHref';
 import { COPY } from '../copy';
 import type { PageProps } from './HomePage';
 import { SubPageHeader } from '../components/SubPageHeader';
@@ -25,6 +26,7 @@ export function ProgramDetailPage(props: PageProps) {
 function ProgramDetail({ lang, setLang, isDark, toggleTheme }: PageProps) {
   const t = useT();
   const navigate = useNavigate();
+  const href = useLocaleHref();
   const { key } = useParams<{ key: string }>();
   const program = t.programs.items.find(p => p.key === key);
   const d = t.programs.detail;
@@ -36,7 +38,7 @@ function ProgramDetail({ lang, setLang, isDark, toggleTheme }: PageProps) {
         <div className="max-w-lg mx-auto px-6 py-24 text-center">
           <h1 className="font-heading font-black text-2xl text-(--premium-black) dark:text-white">{d.notFoundTitle}</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-3 leading-relaxed">{d.notFoundBody}</p>
-          <Link to="/" className="inline-flex items-center gap-2 mt-8 text-sm font-medium hover:underline" style={{ color: NAVY }}>
+          <Link to={href('/')} className="inline-flex items-center gap-2 mt-8 text-sm font-medium hover:underline" style={{ color: NAVY }}>
             <FiArrowLeft size={15} /> {d.backToPrograms}
           </Link>
         </div>
@@ -56,7 +58,7 @@ function ProgramDetail({ lang, setLang, isDark, toggleTheme }: PageProps) {
       <SubPageHeader lang={lang} setLang={setLang} isDark={isDark} toggleTheme={toggleTheme} />
 
       <div className="max-w-3xl mx-auto px-6 py-12">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-(--premium-black) dark:hover:text-white transition">
+        <Link to={href('/')} className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-(--premium-black) dark:hover:text-white transition">
           <FiArrowLeft size={15} /> {d.backToPrograms}
         </Link>
 
@@ -90,7 +92,7 @@ function ProgramDetail({ lang, setLang, isDark, toggleTheme }: PageProps) {
             </div>
           )}
 
-          <SiteButton onClick={() => navigate('/register')} style={{ backgroundColor: NAVY }} className="mt-8">
+          <SiteButton onClick={() => navigate(href('/register'))} style={{ backgroundColor: NAVY }} className="mt-8">
             {d.cta}
           </SiteButton>
         </Reveal>

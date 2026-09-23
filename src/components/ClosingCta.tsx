@@ -2,11 +2,13 @@ import { useNavigate } from 'react-router-dom';
 import { FiArrowRight } from 'react-icons/fi';
 import { Eyebrow, SiteButton, Reveal } from '@premiummg/ui';
 import { useT } from '../lang';
+import { useLocaleHref } from '../lib/useLocaleHref';
 import { NAVY_DARK, PHONE } from '../palette';
 
 export function ClosingCta() {
   const t = useT();
   const navigate = useNavigate();
+  const href = useLocaleHref();
   return (
     <section className="relative overflow-hidden" style={{ backgroundColor: NAVY_DARK }}>
       <div className="absolute inset-0 pmg-bars pointer-events-none" />
@@ -18,7 +20,7 @@ export function ClosingCta() {
           </h2>
           <p className="text-white/75 mt-4 max-w-xl mx-auto">{t.cta.sub}</p>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 mt-9">
-            <SiteButton variant="onDark" onClick={() => navigate('/register')}>
+            <SiteButton variant="onDark" onClick={() => navigate(href('/register'))}>
               {t.cta.button} <FiArrowRight size={16} />
             </SiteButton>
             <p className="text-sm text-white/70">

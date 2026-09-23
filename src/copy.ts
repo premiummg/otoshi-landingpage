@@ -268,6 +268,30 @@ export const EN = {
       body: 'We couldn’t send your registration. Please try again, or contact the club directly.',
     },
   },
+  // Search-result text, kept here with the rest of the copy rather than in
+  // `seo.ts` so the FR/EN completeness check the `Copy` type already gives
+  // every other string covers these too. Lengths are deliberate: titles sit
+  // under ~60 characters and descriptions under ~155, past which Google
+  // truncates them mid-sentence in the result listing.
+  //
+  // `{name}` in the program strings is filled from that program's own
+  // `programs.items` entry, so a program's search title tracks its real
+  // name instead of being a second copy of it.
+  seo: {
+    home: {
+      title: 'Judo Classes in Dieppe & Moncton, NB | Judo Otoshi',
+      description: 'Judo for kids, teens and adults in Dieppe, NB. Certified senseis and classes for ages 4 and up, serving Greater Moncton since 2012. Free trial class.',
+    },
+    register: {
+      title: 'Register for Judo Classes | Judo Otoshi Dieppe',
+      description: 'Sign up for judo at Club Otoshi in Dieppe, NB. Pick your class and schedule, register the whole family, and get 50% off an adult registration.',
+    },
+    program: {
+      title: '{name} Judo Classes in Dieppe, NB | Judo Otoshi',
+      descriptionSuffix: 'Classes at Club Otoshi in Dieppe, NB.',
+    },
+    organizationDescription: 'Club de Judo Otoshi is a not-for-profit judo club in Dieppe, New Brunswick, coaching kids, teens and adults across Greater Moncton since 2012.',
+  },
 };
 
 export type Copy = typeof EN;
@@ -529,6 +553,21 @@ export const FR: Copy = {
       title: 'Une erreur s’est produite',
       body: 'Nous n’avons pas pu envoyer votre inscription. Veuillez réessayer ou contacter le club directement.',
     },
+  },
+  seo: {
+    home: {
+      title: 'Cours de judo à Dieppe et Moncton, N.-B. | Judo Otoshi',
+      description: 'Judo pour enfants, ados et adultes à Dieppe, N.-B. Senseis certifiés et cours dès 4 ans, au service du Grand Moncton depuis 2012. Cours d’essai gratuit.',
+    },
+    register: {
+      title: 'Inscription aux cours de judo | Judo Otoshi Dieppe',
+      description: 'Inscrivez-vous au judo au Club Otoshi de Dieppe, N.-B. Choisissez votre cours et votre horaire, inscrivez toute la famille, 50 % de rabais pour un adulte.',
+    },
+    program: {
+      title: 'Cours de judo {name} à Dieppe, N.-B. | Judo Otoshi',
+      descriptionSuffix: 'Cours au Club Otoshi de Dieppe, N.-B.',
+    },
+    organizationDescription: 'Le Club de Judo Otoshi est un club de judo sans but lucratif de Dieppe, au Nouveau-Brunswick, qui entraîne enfants, ados et adultes du Grand Moncton depuis 2012.',
   },
 };
 

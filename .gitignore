@@ -1,5 +1,8 @@
 node_modules
 dist
+# Intermediate SSR bundle the prerender step builds and then deletes - only
+# ever left on disk when a build fails partway through.
+.prerender
 .DS_Store
 *.local
 .env

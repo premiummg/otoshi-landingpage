@@ -1,0 +1,29 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/about-otoshi", "destination": "/#who", "permanent": true },
+    { "source": "/about-us", "destination": "/#who", "permanent": true },
+    { "source": "/instructors", "destination": "/#who", "permanent": true },
+    { "source": "/classes", "destination": "/#programs", "permanent": true },
+    { "source": "/dieppe-classes", "destination": "/#schedule", "permanent": true },
+    { "source": "/calendar-fees-calendrier-et-frais", "destination": "/#schedule", "permanent": true },
+    { "source": "/contact-us", "destination": "/#contact", "permanent": true },
+    { "source": "/contact", "destination": "/#contact", "permanent": true },
+    { "source": "/judo", "destination": "/", "permanent": true },
+    { "source": "/judo-for-all-judo-pour-tous", "destination": "/#programs", "permanent": true },
+    { "source": "/membership", "destination": "/register", "permanent": true },
+    { "source": "/judo-for-all-registration", "destination": "/register", "permanent": true },
+    { "source": "/judo-canada-nb-renewal", "destination": "/register", "permanent": true },
+
+    { "source": "/fr/about-us", "destination": "/fr#who", "permanent": true },
+    { "source": "/fr/contact", "destination": "/fr#contact", "permanent": true },
+    { "source": "/fr/judo-for-all-judo-pour-tous", "destination": "/fr#programs", "permanent": true },
+    { "source": "/fr/membership", "destination": "/fr/register", "permanent": true },
+    { "source": "/fr/facility-items/:path*", "destination": "/fr", "permanent": true },
+
+    { "source": "/home/:path*", "destination": "/", "permanent": true },
+    { "source": "/category/:path*", "destination": "/", "permanent": true },
+    { "source": "/author/:path*", "destination": "/", "permanent": true }
+  ]
+}

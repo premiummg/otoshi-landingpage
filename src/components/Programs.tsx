@@ -3,6 +3,7 @@ import { FiArrowRight } from 'react-icons/fi';
 import { MediaCard, SiteButton, Reveal } from '@premiummg/ui';
 import { SectionHead } from './SectionHead';
 import { useT } from '../lang';
+import { useLocaleHref } from '../lib/useLocaleHref';
 import { NAVY, NAVY_ACCENT, MEDIA, BAND_PANEL } from '../palette';
 
 // Malcolm's fix, and the one item with the most day-to-day confusion behind
@@ -12,6 +13,7 @@ import { NAVY, NAVY_ACCENT, MEDIA, BAND_PANEL } from '../palette';
 export function Programs({ go }: { go: (id: string) => void }) {
   const t = useT();
   const navigate = useNavigate();
+  const href = useLocaleHref();
   return (
     <section id="programs" className={BAND_PANEL}>
       <div className="max-w-6xl mx-auto px-6 py-20 md:py-24">
@@ -25,7 +27,7 @@ export function Programs({ go }: { go: (id: string) => void }) {
                 title={p.name}
                 eyebrow={p.ages}
                 eyebrowColor={NAVY_ACCENT}
-                onClick={() => navigate(`/programs/${p.key}`)}
+                onClick={() => navigate(href(`/programs/${p.key}`))}
               >
                 {p.body}
               </MediaCard>

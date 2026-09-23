@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FiX, FiMenu } from 'react-icons/fi';
 import { SiteButton, LanguageToggle, DarkModeToggle, type Lang } from '@premiummg/ui';
 import { useT } from '../lang';
+import { useLocaleHref } from '../lib/useLocaleHref';
 import { GOLD, NAVY, MEDIA, BAND_PANEL } from '../palette';
 
 // A real marketing nav (logo, link row, mobile menu) - not @premiummg/ui's
@@ -17,6 +18,7 @@ export function SiteNav({ lang, setLang, go, isDark, toggleTheme }: {
 }) {
   const t = useT();
   const navigate = useNavigate();
+  const href = useLocaleHref();
   const [openMenu, setOpenMenu] = useState(false);
 
   const linkCls = 'relative py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-[#14151A] dark:hover:text-white transition-colors after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-0 after:bg-[#FFA810] after:transition-all after:duration-200 hover:after:w-full';
@@ -61,7 +63,7 @@ export function SiteNav({ lang, setLang, go, isDark, toggleTheme }: {
                 `inline-flex` was silently winning the cascade at every
                 width, so `hidden` never actually did anything. `!important`
                 forces it through regardless of generated rule order. */}
-            <SiteButton onClick={() => navigate('/register')} style={{ backgroundColor: NAVY }} className="px-4! py-2.5! hidden! lg:inline-flex">
+            <SiteButton onClick={() => navigate(href('/register'))} style={{ backgroundColor: NAVY }} className="px-4! py-2.5! hidden! lg:inline-flex">
               {t.nav.cta}
             </SiteButton>
             <button onClick={() => setOpenMenu(o => !o)} aria-label="Menu"
@@ -80,7 +82,7 @@ export function SiteNav({ lang, setLang, go, isDark, toggleTheme }: {
               </button>
             ))}
             <div className="pt-3">
-              <SiteButton onClick={() => { setOpenMenu(false); navigate('/register'); }} style={{ backgroundColor: NAVY }} className="w-full">
+              <SiteButton onClick={() => { setOpenMenu(false); navigate(href('/register')); }} style={{ backgroundColor: NAVY }} className="w-full">
                 {t.nav.cta}
               </SiteButton>
             </div>
