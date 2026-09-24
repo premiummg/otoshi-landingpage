@@ -4,7 +4,7 @@ import { FiX, FiMenu } from 'react-icons/fi';
 import { SiteButton, LanguageToggle, DarkModeToggle, type Lang } from '@premiummg/ui';
 import { useT } from '../lang';
 import { useLocaleHref } from '../lib/useLocaleHref';
-import { GOLD, NAVY, webp, BAND_PANEL } from '../palette';
+import { NAVY, webp, BAND_PANEL } from '../palette';
 
 // A real marketing nav (logo, link row, mobile menu) - not @premiummg/ui's
 // `Navbar`, which hardcodes `PremiumLogo` and is scoped to a slim app-chrome
@@ -21,7 +21,12 @@ export function SiteNav({ lang, setLang, go, isDark, toggleTheme }: {
   const href = useLocaleHref();
   const [openMenu, setOpenMenu] = useState(false);
 
-  const linkCls = 'relative py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-[#14151A] dark:hover:text-white transition-colors after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-0 after:bg-[#FFA810] after:transition-all after:duration-200 hover:after:w-full';
+  // after:bg-[#1A2C6E] is NAVY's own hex value, hardcoded rather than
+  // interpolated - Tailwind's JIT scans source text statically, so a
+  // template-literal `[${NAVY}]` can't be picked up at build time. Same
+  // navy in both themes, matching the "Join Club Otoshi" button, which
+  // also stays NAVY regardless of theme.
+  const linkCls = 'relative py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-[#14151A] dark:hover:text-white transition-colors after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-0 after:bg-[#1A2C6E] after:transition-all after:duration-200 hover:after:w-full';
 
   return (
     <div className="sticky top-0 z-20">
@@ -97,7 +102,7 @@ export function SiteNav({ lang, setLang, go, isDark, toggleTheme }: {
           </div>
         )}
       </nav>
-      <div className="h-0.75" style={{ backgroundColor: GOLD }} />
+      <div className="h-0.75" style={{ backgroundColor: NAVY }} />
     </div>
   );
 }
