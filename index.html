@@ -9,8 +9,14 @@
      forces a refetch instead of relying on someone clearing site data. Bump
      the version again if the icon itself ever changes and still shows the
      old one. -->
-<link rel="icon" type="image/png" href="/media/logo.png?v=2">
-<link rel="apple-touch-icon" href="/media/logo.png?v=2">
+<!-- Sized for what actually reads them, not the same 512x512 source the
+     rest of the page uses: a browser tab fetches the plain favicon on
+     every visit, and reusing the full logo there was 78.7 KB for an icon
+     drawn at a few dozen pixels. apple-touch-icon stays a PNG (not the
+     WebP the rest of the images moved to) - iOS does not accept a WebP
+     here. -->
+<link rel="icon" type="image/png" href="/media/favicon-48.png?v=2">
+<link rel="apple-touch-icon" href="/media/apple-touch-icon.png?v=2">
 <meta name="theme-color" content="#1A2C6E">
 <!-- max-image-preview:large opts the club's photos into full-size thumbnails
      in Google results instead of the default postage stamp - for a local

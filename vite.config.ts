@@ -32,5 +32,11 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
+    // Read by scripts/prerender.mjs to find each lazy page's own built
+    // filename (it has a content hash Vite only decides at this build), so
+    // a direct hit on /register or /programs/:key can get a modulepreload
+    // hint for its own chunk instead of discovering it only after the main
+    // bundle has already loaded and started executing.
+    manifest: true,
   },
 });

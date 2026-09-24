@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, useNavigate, useNavigationType } from 'react-router-dom';
 import { COPY, type Lang } from './copy';
 import { LangCtx } from './lang';
@@ -6,8 +6,20 @@ import { useDarkMode } from './lib/useDarkMode';
 import { localePath, splitLocalePath, FR_PREFIX } from './lib/routes';
 import { Seo } from './components/Seo';
 import { HomePage } from './pages/HomePage';
-import { RegisterPage } from './pages/RegisterPage';
-import { ProgramDetailPage } from './pages/ProgramDetailPage';
+
+// Lazy, unlike HomePage: a visitor who only ever reads the home page (most
+// of them) was downloading the entire registration flow with it - four form
+// steps, address/email autocomplete, and react-phone-number-input, which
+// alone carries a full metadata table for every country's phone format.
+// None of that is needed to paint the page they actually asked for.
+//
+// This DOES need care in the prerender build (scripts/prerender.mjs warms
+// both chunks before rendering any route, and again per-route since Vite's
+// SSR build gives each entry its own module registry) - `renderToString`
+// does not wait out a lazy import, so an un-warmed chunk would silently
+// prerender as this Suspense fallback instead of the real page.
+const RegisterPage = lazy(() => import('./pages/RegisterPage').then(m => ({ default: m.RegisterPage })));
+const ProgramDetailPage = lazy(() => import('./pages/ProgramDetailPage').then(m => ({ default: m.ProgramDetailPage })));
 
 // React Router doesn't reset scroll position on navigation the way a real
 // page load does - clicking a program card from partway down the home page
@@ -61,14 +73,21 @@ function AppRoutes() {
     <LangCtx.Provider value={COPY[lang]}>
       <Seo lang={lang} path={path} />
       <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<HomePage {...pageProps} />} />
-        <Route path="/register" element={<RegisterPage {...pageProps} />} />
-        <Route path="/programs/:key" element={<ProgramDetailPage {...pageProps} />} />
-        <Route path={FR_PREFIX} element={<HomePage {...pageProps} />} />
-        <Route path={`${FR_PREFIX}/register`} element={<RegisterPage {...pageProps} />} />
-        <Route path={`${FR_PREFIX}/programs/:key`} element={<ProgramDetailPage {...pageProps} />} />
-      </Routes>
+      {/* No fallback UI (`null`): every route that can suspend here is also
+          prerendered, so a real client navigation only ever suspends for the
+          time it takes to fetch an already-cached-by-the-preceding-page-load
+          chunk - normally under a frame. A skeleton would flash on for that
+          one frame and read as a bug, not a loading state. */}
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/" element={<HomePage {...pageProps} />} />
+          <Route path="/register" element={<RegisterPage {...pageProps} />} />
+          <Route path="/programs/:key" element={<ProgramDetailPage {...pageProps} />} />
+          <Route path={FR_PREFIX} element={<HomePage {...pageProps} />} />
+          <Route path={`${FR_PREFIX}/register`} element={<RegisterPage {...pageProps} />} />
+          <Route path={`${FR_PREFIX}/programs/:key`} element={<ProgramDetailPage {...pageProps} />} />
+        </Routes>
+      </Suspense>
     </LangCtx.Provider>
   );
 }

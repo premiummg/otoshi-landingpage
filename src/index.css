@@ -1,5 +1,16 @@
 @import "tailwindcss";
 @import "@premiummg/ui/styles.css";
+/* Imported here, in the eagerly-loaded stylesheet, rather than from
+   PhoneField.tsx where it's actually used - PhoneField is only reachable
+   through RegisterPage, which is lazy-loaded (see App.tsx), and Rollup
+   splits a lazy chunk's own CSS into its own file with no <link> for it in
+   the prerendered HTML (that link is only added by the JS runtime, on the
+   client, after the chunk loads). Landing straight on /register from a
+   search result or a shared link would show the unstyled country selector
+   for a flash until then. The stylesheet itself is tiny (3 KB) - cheaper to
+   ship it on every page than to reproduce Vite's own per-chunk CSS loading
+   for prerendered HTML. */
+@import "react-phone-number-input/style.css";
 @config "../tailwind.config.js";
 
 /* Tailwind v4 dropped the v3 preflight default that gave unstyled buttons

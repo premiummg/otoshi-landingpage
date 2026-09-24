@@ -47,6 +47,38 @@ const { renderRoute, allRoutes } = await import(
 
 const template = readFileSync(join(dist, 'index.html'), 'utf8');
 
+// A direct hit on /register or /programs/:key (a search result, a shared
+// link - not a click from within the already-loaded app) still only gets
+// the main bundle's own <script> tag; the page's OWN chunk (see App.tsx's
+// `lazy()` split) is only discovered once that main bundle runs, decides
+// which route matched, and issues the dynamic import - one avoidable extra
+// round trip on the very pages the split was supposed to make cheaper to
+// visit directly. A `modulepreload` hint added to that page's own
+// prerendered HTML lets the browser start fetching the chunk immediately,
+// in parallel with the main bundle, instead of after it.
+//
+// The manifest (vite.config.ts's `build.manifest: true`) is what makes this
+// possible without hardcoding a filename: Vite content-hashes every chunk,
+// so `RegisterPage-<hash>.js` is a different string on every build.
+const manifest = JSON.parse(readFileSync(join(dist, '.vite/manifest.json'), 'utf8'));
+
+function chunkFilesFor(srcKey, seen = new Set()) {
+  if (seen.has(srcKey)) return [];
+  seen.add(srcKey);
+  const entry = manifest[srcKey];
+  if (!entry) return [];
+  const nested = (entry.imports ?? []).filter(k => k !== 'index.html').flatMap(k => chunkFilesFor(k, seen));
+  return [entry.file, ...nested];
+}
+
+function preloadLinksFor(path) {
+  const srcKey = path === '/register' ? 'src/pages/RegisterPage.tsx'
+    : path.startsWith('/programs/') ? 'src/pages/ProgramDetailPage.tsx'
+    : null;
+  if (!srcKey) return '';
+  return chunkFilesFor(srcKey).map(f => `<link rel="modulepreload" href="/${f}">`).join('\n');
+}
+
 const SEO_BLOCK = /<!--seo-start-->[\s\S]*?<!--seo-end-->/;
 const APP_SLOT = '<!--app-html-->';
 const HTML_TAG = '<html lang="en">';
@@ -65,8 +97,21 @@ for (const [what, present] of [
 const routes = allRoutes();
 const written = [];
 
-for (const { url } of routes) {
-  const { html, head, lang } = renderRoute(url);
+for (const { url, path } of routes) {
+  const { html, head, lang } = await renderRoute(url);
+
+  // entry-prerender.tsx's lazy-page workaround is a fixed number of event
+  // loop turns, not a wait for an actual completion signal - if a future
+  // dependency bump makes that page's own chunk graph slower to resolve
+  // than today's margin covers, `renderToString` doesn't throw, it just
+  // emits this same recovery marker again for a still-suspended boundary.
+  // Failing the build on it is what turns "a future silent regression"
+  // into "this build fails right here, on this route."
+  if (html.includes('Switched to client rendering')) {
+    throw new Error(`${url} prerendered as an empty Suspense fallback, not real content - see entry-prerender.tsx's drainMicrotasks.`);
+  }
+
+  const preloads = preloadLinksFor(path);
 
   // Function replacers, not plain strings: `String.replace` treats `$&`,
   // "$'" and `$$` inside a replacement STRING as substitution directives, so
@@ -75,7 +120,7 @@ for (const { url } of routes) {
   // replacement is inserted literally.
   const page = template
     .replace(HTML_TAG, () => `<html lang="${lang}">`)
-    .replace(SEO_BLOCK, () => head)
+    .replace(SEO_BLOCK, () => (preloads ? `${head}\n${preloads}` : head))
     .replace(APP_SLOT, () => html);
 
   // `/` becomes dist/index.html, `/fr/register` becomes
@@ -116,6 +161,9 @@ const sitemap = [
 writeFileSync(join(dist, 'sitemap.xml'), sitemap);
 
 rmSync(ssrDist, { recursive: true, force: true });
+// Build metadata (the chunk map this script just read), not something the
+// site itself serves - same reasoning as removing .prerender above.
+rmSync(join(dist, '.vite'), { recursive: true, force: true });
 
 console.log(`prerendered ${written.length} routes:\n  ${written.join('\n  ')}`);
 console.log('wrote dist/sitemap.xml');

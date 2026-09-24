@@ -1,5 +1,6 @@
 import PhoneInput from 'react-phone-number-input';
-import 'react-phone-number-input/style.css';
+// The library's stylesheet is imported from index.css, not here - see the
+// comment there for why this component's own lazy chunk can't carry it.
 
 // Same library and `.phone-input-field` class as timesheet-payroll-system's
 // own ProfilePage.tsx - as-you-type formatting for a real phone number
