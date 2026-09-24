@@ -21,28 +21,60 @@ import { HomePage } from './pages/HomePage';
 const RegisterPage = lazy(() => import('./pages/RegisterPage').then(m => ({ default: m.RegisterPage })));
 const ProgramDetailPage = lazy(() => import('./pages/ProgramDetailPage').then(m => ({ default: m.ProgramDetailPage })));
 
+// Where each history entry's scroll position was last seen, keyed by React
+// Router's own per-entry `location.key`. Module scope, not state - it needs
+// to survive the home page unmounting entirely while a sub-page is open, and
+// nothing here needs a re-render when it changes.
+//
+// This is what actually answers "go back to where I was": the browser's own
+// scroll restoration is disabled below (it was firing, if at all, before the
+// page had finished laying out, since a client-side route swap has no
+// navigation event for it to time itself against - so it never reliably put
+// the reader back where they'd been, which is the bug this file now works
+// around instead of relying on).
+const scrollPositions = new Map<string, number>();
+
 // React Router doesn't reset scroll position on navigation the way a real
 // page load does - clicking a program card from partway down the home page
-// otherwise lands the new page partway down too. Resets to the top only on
-// PUSH/REPLACE (a real Link/navigate() to a new path); a POP (the
-// browser's own back/forward button) is left alone so the browser's native
-// per-history-entry scroll memory still restores where you were.
+// otherwise lands the new page partway down too. Resets to the top on
+// PUSH/REPLACE (a real Link/navigate() to a new path); a POP (the browser's
+// back/forward buttons, or this app's own "back" links - see useGoBack)
+// restores whatever position was last recorded for the entry being
+// returned to, or the top if none was ever recorded (a direct hit on that
+// URL, nothing to return to).
 //
 // It watches the language-LESS path, not the raw pathname, because switching
 // language is now a navigation too (`/` to `/fr`). That is a different URL
 // but the same page, and a reader two thirds of the way down the schedule
 // who clicks FR should stay on the schedule, not get thrown back to the hero.
-function ScrollToTop() {
-  const { pathname } = useLocation();
+function ScrollManager() {
+  const { pathname, key } = useLocation();
   const navigationType = useNavigationType();
   const { path } = splitLocalePath(pathname);
   const lastPath = useRef(path);
 
   useEffect(() => {
+    const original = window.history.scrollRestoration;
+    window.history.scrollRestoration = 'manual';
+    return () => {
+      window.history.scrollRestoration = original;
+    };
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => scrollPositions.set(key, window.scrollY);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [key]);
+
+  useEffect(() => {
     const changedPage = lastPath.current !== path;
     lastPath.current = path;
-    if (navigationType !== 'POP' && changedPage) window.scrollTo(0, 0);
-  }, [path, navigationType]);
+    if (!changedPage) return;
+    if (navigationType === 'POP') window.scrollTo(0, scrollPositions.get(key) ?? 0);
+    else window.scrollTo(0, 0);
+  }, [path, key, navigationType]);
+
   return null;
 }
 
@@ -72,7 +104,7 @@ function AppRoutes() {
   return (
     <LangCtx.Provider value={COPY[lang]}>
       <Seo lang={lang} path={path} />
-      <ScrollToTop />
+      <ScrollManager />
       {/* No fallback UI (`null`): every route that can suspend here is also
           prerendered, so a real client navigation only ever suspends for the
           time it takes to fetch an already-cached-by-the-preceding-page-load

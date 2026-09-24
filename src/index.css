@@ -23,6 +23,20 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
+/* iOS Safari zooms the whole page in when a focused text field's font-size
+   computes to under 16px, and doesn't reliably zoom back out again once the
+   field blurs - not something fixable from JS, since it's the browser's own
+   focus behavior, not a bug in this form. @premiummg/ui's shared
+   `.input-field` sets 14px (text-sm); overridden here, in the SAME
+   `@layer components` (declared after the package's own import in this
+   file, so it wins on source order at equal specificity) rather than
+   touching the package for one project's font-size. */
+@layer components {
+  .input-field {
+    font-size: 1rem;
+  }
+}
+
 /* -- Phone input (react-phone-number-input) --------------------------
    Same class names/rules as timesheet-payroll-system's own
    (frontend/src/index.css) - app-level, not part of @premiummg/ui's shared
@@ -45,7 +59,9 @@ body {
     @apply text-gray-400 text-xs;
   }
   .phone-input-field .PhoneInputInput {
-    @apply flex-1 px-3 py-2.5 text-sm outline-none bg-white;
+    /* text-base (16px), not text-sm - see the .input-field rule above for
+       why: iOS Safari's zoom-on-focus-under-16px applies here too. */
+    @apply flex-1 px-3 py-2.5 text-base outline-none bg-white;
     color: var(--premium-dark-grey);
   }
   .phone-input-field .PhoneInputInput::placeholder {

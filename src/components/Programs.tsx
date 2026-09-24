@@ -21,6 +21,23 @@ export function Programs({ go }: { go: (id: string) => void }) {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-12">
           {t.programs.items.map((p, i) => (
             <Reveal key={p.key} delay={i * 80}>
+              {/* flex! flex-col! items-stretch! justify-start!: MediaCard
+                  renders a <button> here (it gets an onClick), and a
+                  <button>'s default rendering centers its content block
+                  vertically when that content is shorter than the button's
+                  own height - confirmed by measuring actual rendered
+                  boxes in a real browser: Beginner/Elite's longer body
+                  text fills the card almost exactly (1px of slack, split
+                  1px above/1px below - invisible), while Intermediate/
+                  Adult's shorter body wraps to fewer lines, leaving ~25px
+                  of slack that gets split ~12px above/12px below - visible
+                  as a gap between the card's rounded top and the photo,
+                  and genuinely nothing to do with this card's own reveal
+                  animation, an image loading race, or the grid's column
+                  widths (all ruled out first). Forcing a real flex column
+                  with top-aligned content overrides that default:
+                  `!important` because a plain `flex` utility loses to
+                  the button's own internal treatment otherwise. */}
               <MediaCard
                 imageSrc={webp(p.img)}
                 imageAlt={p.name}
@@ -28,6 +45,7 @@ export function Programs({ go }: { go: (id: string) => void }) {
                 eyebrow={p.ages}
                 eyebrowColor={NAVY_ACCENT}
                 onClick={() => navigate(href(`/programs/${p.key}`))}
+                className="flex! flex-col! items-stretch! justify-start!"
               >
                 {p.body}
               </MediaCard>

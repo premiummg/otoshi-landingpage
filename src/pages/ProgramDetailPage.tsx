@@ -1,8 +1,9 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FiArrowLeft, FiClock } from 'react-icons/fi';
 import { SiteButton, Reveal } from '@premiummg/ui';
 import { useT, LangCtx } from '../lang';
 import { useLocaleHref } from '../lib/useLocaleHref';
+import { useGoBack } from '../lib/useGoBack';
 import { COPY } from '../copy';
 import type { PageProps } from './HomePage';
 import { SubPageHeader } from '../components/SubPageHeader';
@@ -27,6 +28,7 @@ function ProgramDetail({ lang, setLang, isDark, toggleTheme }: PageProps) {
   const t = useT();
   const navigate = useNavigate();
   const href = useLocaleHref();
+  const goBack = useGoBack();
   const { key } = useParams<{ key: string }>();
   const program = t.programs.items.find(p => p.key === key);
   const d = t.programs.detail;
@@ -38,9 +40,9 @@ function ProgramDetail({ lang, setLang, isDark, toggleTheme }: PageProps) {
         <div className="max-w-lg mx-auto px-6 py-24 text-center">
           <h1 className="font-heading font-black text-2xl text-(--premium-black) dark:text-white">{d.notFoundTitle}</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-3 leading-relaxed">{d.notFoundBody}</p>
-          <Link to={href('/')} className="inline-flex items-center gap-2 mt-8 text-sm font-medium hover:underline" style={{ color: NAVY }}>
+          <button onClick={goBack} className="inline-flex items-center gap-2 mt-8 text-sm font-medium hover:underline" style={{ color: NAVY }}>
             <FiArrowLeft size={15} /> {d.backToPrograms}
-          </Link>
+          </button>
         </div>
       </div>
     );
@@ -58,12 +60,12 @@ function ProgramDetail({ lang, setLang, isDark, toggleTheme }: PageProps) {
       <SubPageHeader lang={lang} setLang={setLang} isDark={isDark} toggleTheme={toggleTheme} />
 
       <div className="max-w-3xl mx-auto px-6 py-12">
-        <Link to={href('/')} className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-(--premium-black) dark:hover:text-white transition">
+        <button onClick={goBack} className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-(--premium-black) dark:hover:text-white transition">
           <FiArrowLeft size={15} /> {d.backToPrograms}
-        </Link>
+        </button>
 
         <Reveal>
-          <div className="mt-6 rounded-2xl overflow-hidden aspect-[16/9]">
+          <div className="mt-6 rounded-2xl overflow-hidden aspect-video">
             <img src={webp(program.img)} alt={program.name} width={600} height={600} className="w-full h-full object-cover" />
           </div>
 

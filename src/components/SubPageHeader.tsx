@@ -1,8 +1,7 @@
-import { Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import { LanguageToggle, DarkModeToggle, type Lang } from '@premiummg/ui';
 import { useT } from '../lang';
-import { useLocaleHref } from '../lib/useLocaleHref';
+import { useGoBack } from '../lib/useGoBack';
 import { webp, BAND_PANEL } from '../palette';
 
 // A compact header shared by the site's "task, not a page to browse"
@@ -14,15 +13,15 @@ export function SubPageHeader({ lang, setLang, isDark, toggleTheme }: {
   lang: Lang; setLang: (l: Lang) => void; isDark: boolean; toggleTheme: () => void;
 }) {
   const t = useT();
-  const href = useLocaleHref();
+  const goBack = useGoBack();
   return (
     <nav className={`${BAND_PANEL} border-b border-gray-100 dark:border-white/10`}>
       <div className="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
-        <Link to={href('/')} className="flex items-center gap-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-[#14151A] dark:hover:text-white transition">
+        <button onClick={goBack} className="flex items-center gap-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-[#14151A] dark:hover:text-white transition">
           <FiArrowLeft size={15} />
           <img src={webp('logo.png')} alt="Judo Otoshi" width={32} height={32} className="h-8 w-8 object-contain" />
           <span className="hidden sm:inline">{t.register.backToSite}</span>
-        </Link>
+        </button>
         <div className="flex items-center gap-2">
           <LanguageToggle lang={lang} onChange={setLang} names={{ en: 'English', fr: 'Français' }} />
           <DarkModeToggle isDark={isDark} onToggle={toggleTheme} size={17} />
