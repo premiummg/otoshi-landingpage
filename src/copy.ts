@@ -48,6 +48,15 @@ export const EN = {
     // second, hand-maintained copy of the schedule.
     items: [
       {
+        key: 'ninja', img: 'Ninjas.jpg', name: 'Ninja', ages: 'Ages 4–6',
+        body: 'Our youngest judoka. Games and simple movements that build coordination, listening skills, and a first taste of the dojo.',
+        long: [
+          'Ninja is a first step onto the mat for the youngest kids at the club, taught through games and short, simple drills rather than formal technique - the focus is coordination, balance, and following instructions in a group.',
+          'A single 45-minute class on Saturday morning, sized to a young child’s attention span, and the natural on-ramp into Beginner once a child is ready for more structured training.',
+        ],
+        classNames: ['Ninja'],
+      },
+      {
         key: 'beginner', img: 'Beginner.jpg', name: 'Beginner', ages: 'Ages 6–13',
         body: 'New to judo. Falling safely, balance, and the first throws, in a structured and encouraging class.',
         long: [
@@ -196,6 +205,8 @@ export const EN = {
       emailHint: 'Used to send registration details and updates from the Otoshi team.',
       phone: 'Phone',
       address: 'Address',
+      addressSearching: 'Searching…',
+      addressAttribution: 'Data from OpenStreetMap contributors',
       city: 'City',
       province: 'Province',
       postalCode: 'Postal Code',
@@ -330,6 +341,15 @@ export const FR: Copy = {
     eyebrow: 'Cours de judo',
     title: 'Un cours pour chaque âge et chaque niveau.',
     items: [
+      {
+        key: 'ninja', img: 'Ninjas.jpg', name: 'Ninja', ages: 'De 4 à 6 ans',
+        body: 'Nos plus jeunes judokas. Des jeux et des mouvements simples qui développent la coordination, l’écoute et un premier contact avec le dojo.',
+        long: [
+          'Ninja est un premier pas sur le tatami pour les plus jeunes du club, enseigné par des jeux et de courts exercices simples plutôt que de la technique formelle - l’accent est mis sur la coordination, l’équilibre et le suivi des consignes en groupe.',
+          'Un seul cours de 45 minutes le samedi matin, adapté à la capacité d’attention d’un jeune enfant, et la transition naturelle vers Débutant lorsque l’enfant est prêt pour un entraînement plus structuré.',
+        ],
+        classNames: ['Ninja'],
+      },
       {
         key: 'beginner', img: 'Beginner.jpg', name: 'Débutant', ages: 'De 6 à 13 ans',
         body: 'Nouveau au judo. Bien tomber, l’équilibre et les premières projections, dans un cours structuré et encourageant.',
@@ -476,6 +496,8 @@ export const FR: Copy = {
       emailHint: 'Utilisé pour envoyer les détails d’inscription et les mises à jour de l’équipe Otoshi.',
       phone: 'Téléphone',
       address: 'Adresse',
+      addressSearching: 'Recherche…',
+      addressAttribution: 'Données fournies par les contributeurs d’OpenStreetMap',
       city: 'Ville',
       province: 'Province',
       postalCode: 'Code postal',

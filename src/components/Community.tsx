@@ -4,6 +4,16 @@ import { FeatureCard, Reveal } from '@premiummg/ui';
 import { useT } from '../lang';
 import { BAND_PANEL } from '../palette';
 
+// FeatureCard's own resting background is `dark:bg-(--premium-dark-grey)`
+// (#212121), a near-match for this section's own BAND_PANEL (#1B1B22) - the
+// two read as almost the same surface in dark mode, so the cards had
+// nothing but a barely-there border to separate them from the page. `!`
+// forces this card-on-panel shade through: FeatureCard appends the passed
+// `className` after its own default classes in the DOM, but cascade order
+// follows the generated stylesheet, not DOM order, so a plain (non-`!`)
+// override here isn't guaranteed to win against FeatureCard's own rule.
+const CARD_FIX = 'dark:bg-[#26262F]! dark:border-white/15!';
+
 const ICONS: IconType[] = [FiHeart, FiShield, FiUsers];
 
 // FeatureCard's own `align="center"` is exactly this layout - the doc
@@ -25,7 +35,7 @@ export function Community() {
                 <FeatureCard
                   align="center"
                   title={c.title}
-                  className="group transition-shadow duration-200 hover:shadow-md dark:hover:shadow-black/30"
+                  className={`group shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-black/40 ${CARD_FIX}`}
                   icon={
                     // dark:group-hover: written out explicitly, not left to
                     // fall back on the plain group-hover: rule - Tailwind

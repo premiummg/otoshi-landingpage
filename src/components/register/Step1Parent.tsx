@@ -1,10 +1,8 @@
-import { Card } from '@premiummg/ui';
+import { Card, AddressAutocomplete, type AddressSuggestion } from '@premiummg/ui';
 import { useT } from '../../lang';
 import { Field } from './Field';
-import { AddressAutocomplete } from './AddressAutocomplete';
 import { EmailAutocomplete } from './EmailAutocomplete';
 import { PhoneField } from './PhoneField';
-import type { AddressSuggestion } from '../../lib/nominatim';
 import type { RegisterFormData } from '../../registerTypes';
 
 export function Step1Parent({ data, setData, errors }: {
@@ -65,6 +63,10 @@ export function Step1Parent({ data, setData, errors }: {
           value={data.parent.address}
           onChange={v => set('address', v)}
           onSelect={selectAddress}
+          countryCodes="ca"
+          userAgent="OtoshiRegistration/1.0 (otoshi.ca)"
+          searchingLabel={s.addressSearching}
+          attributionLabel={s.addressAttribution}
         />
       </Field>
 

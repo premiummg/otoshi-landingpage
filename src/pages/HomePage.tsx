@@ -37,6 +37,11 @@ export function HomePage({ lang, setLang, isDark, toggleTheme }: PageProps) {
       <SiteNav lang={lang} setLang={setLang} go={go} isDark={isDark} toggleTheme={toggleTheme} />
       <BackToTop go={go} />
       <Hero go={go} />
+      {/* High up, right after the hero, so the sponsor logos read as
+          "trusted by" credibility before the visitor even gets to the
+          community/programs copy - not buried at the very bottom of the
+          page where almost nobody scrolls. */}
+      <Sponsors />
       <Community />
       {/* Malcolm's fix: the "78% confidence / 78% social skills / 56%
           openness" stat band used to sit here - he asked for it removed
@@ -46,7 +51,6 @@ export function HomePage({ lang, setLang, isDark, toggleTheme }: PageProps) {
       <Who />
       <Schedule go={go} />
       <JudoForAll />
-      <Sponsors />
       <ClosingCta />
       <Footer />
     </div>

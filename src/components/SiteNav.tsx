@@ -48,22 +48,30 @@ export function SiteNav({ lang, setLang, go, isDark, toggleTheme }: {
               names={{ en: 'English', fr: 'Français' }}
             />
             <DarkModeToggle isDark={isDark} onToggle={toggleTheme} size={17} />
-            {/* Hidden until `lg` (matching the full nav-link row above), not
-                `sm` - LanguageToggle always renders both flags+labels with
-                no compact mode, and the French CTA text ("Joindre le Club
-                Otoshi") is long enough that showing this alongside the
-                toggle, dark-mode button, and hamburger overflowed the row
-                horizontally on narrower screens. The hamburger's own open
-                menu already has a full-width CTA, so nothing is lost below
-                `lg`.
+            {/* Hidden until `md`, not `sm` - LanguageToggle always renders
+                both flags+labels with no compact mode, and the French CTA
+                text ("Joindre le Club Otoshi") is long enough that showing
+                this alongside the toggle, dark-mode button, and hamburger
+                overflowed the row horizontally below `md`. The nav-link row
+                above still waits for `lg` (it needs more room than the
+                button alone), so `md`-to-`lg` shows logo + toggle + dark
+                mode + this button + hamburger, with no visible nav-link row
+                - the hamburger's own open menu covers those links, so
+                nothing is lost.
                 `hidden!`, not plain `hidden` - SiteButton's own base class
                 list already includes an unconditional `inline-flex`, which
                 the compiled stylesheet happens to declare AFTER `.hidden`;
                 equal specificity plus later source order meant that base
                 `inline-flex` was silently winning the cascade at every
-                width, so `hidden` never actually did anything. `!important`
-                forces it through regardless of generated rule order. */}
-            <SiteButton onClick={() => navigate(href('/register'))} style={{ backgroundColor: NAVY }} className="px-4! py-2.5! hidden! lg:inline-flex">
+                width, so `hidden` never actually did anything.
+                `md:inline-flex!` needs that same `!important`, not just
+                `hidden!` - an `!important` rule always beats a non-
+                `!important` one regardless of the media query, so an
+                un-bang'd `md:inline-flex` could never win back over
+                `hidden!` at any width and the button stayed invisible even
+                on desktop. Both sides now carry `!important`, so which one
+                applies is decided by the media query like normal. */}
+            <SiteButton onClick={() => navigate(href('/register'))} style={{ backgroundColor: NAVY }} className="px-4! py-2.5! hidden! md:inline-flex!">
               {t.nav.cta}
             </SiteButton>
             <button onClick={() => setOpenMenu(o => !o)} aria-label="Menu"

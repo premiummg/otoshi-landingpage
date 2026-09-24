@@ -29,8 +29,13 @@ export function ParticipantFields({ index, label, levels, showParentDiscount, va
     // Schedule keys aren't shared across classes (Malcolm: a Ninja can't
     // pick an Elite's 4x/week option), so switching class clears whatever
     // schedule was chosen for the old one instead of leaving a stale,
-    // now-invisible selection behind.
-    onChange({ ...value, classKey, scheduleKey: '' });
+    // now-invisible selection behind. When the new class only has one
+    // schedule/price option (e.g. Adult), there's nothing to actually
+    // choose, so pick it automatically instead of making the user open a
+    // dropdown just to click its only entry.
+    const newLevel = levels.find(l => l.key === classKey);
+    const schedules = newLevel?.schedules ?? [];
+    onChange({ ...value, classKey, scheduleKey: schedules.length === 1 ? schedules[0].key : '' });
   }
 
   const prefix = `participant-${index}`;

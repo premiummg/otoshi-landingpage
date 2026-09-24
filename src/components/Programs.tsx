@@ -45,7 +45,16 @@ export function Programs({ go }: { go: (id: string) => void }) {
                 eyebrow={p.ages}
                 eyebrowColor={NAVY_ACCENT}
                 onClick={() => navigate(href(`/programs/${p.key}`))}
-                className="flex! flex-col! items-stretch! justify-start!"
+                // MediaCard's own image wrapper is a fixed `aspect-square`
+                // with no prop to change it - at a phone's own full card
+                // width that's nearly as tall as it is wide, so these badge
+                // graphics (all navy with a lot of empty margin around the
+                // shield, see registerData.ts's own note on the art style)
+                // ate a huge share of the screen before any text was
+                // visible. Shorter below `sm` only, back to the square
+                // that already reads fine once there's a multi-column grid
+                // giving each card real width.
+                className="flex! flex-col! items-stretch! justify-start! [&_.aspect-square]:aspect-4/3 sm:[&_.aspect-square]:aspect-square"
               >
                 {p.body}
               </MediaCard>

@@ -2,6 +2,7 @@ import { FiPhone, FiMail, FiFacebook, FiInstagram } from 'react-icons/fi';
 import { PremiumLogo } from '@premiummg/ui';
 import { useT } from '../lang';
 import { webp, PHONE, EMAIL } from '../palette';
+import { SPONSORS } from './Sponsors';
 
 // A page-owned footer shell, not @premiummg/ui's SiteFooter - that shared
 // component's column grid is fixed at md:2/lg:4 with no count prop, and
@@ -30,7 +31,7 @@ export function Footer() {
     // where the phone/email/hours/social links actually live, there's no
     // separate contact section on the page.
     <footer id="contact" className="bg-(--premium-black) text-white/70">
-      <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+      <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 lg:grid-cols-4 gap-10">
         <FooterColumn>
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
             <img src={webp('logo.png')} alt="Judo Otoshi" width={112} height={112} className="h-28 w-28 object-contain" />
@@ -77,6 +78,21 @@ export function Footer() {
           <a href="https://premiummg.ca/" target="_blank" rel="noreferrer" className="inline-block cursor-pointer hover:opacity-80 transition">
             <PremiumLogo variant="horizontal" mode="dark" size="sm" />
           </a>
+        </FooterColumn>
+
+        <FooterColumn label={t.sponsors.label}>
+          <div className="flex flex-wrap items-center gap-3">
+            {SPONSORS.map(s => (
+              // Same reason as the homepage strip: both logo files sit on a
+              // plain white background, so they need a light surface behind
+              // them rather than the footer's own near-black one.
+              <a key={s.file} href={s.url} target="_blank" rel="noopener noreferrer"
+                 className="flex h-12 w-24 items-center justify-center rounded-lg bg-white p-2 transition hover:opacity-80">
+                <img src={webp(s.file)} alt={s.name} loading="lazy" width={s.width} height={s.height}
+                     className="h-full w-full object-contain" />
+              </a>
+            ))}
+          </div>
         </FooterColumn>
       </div>
 

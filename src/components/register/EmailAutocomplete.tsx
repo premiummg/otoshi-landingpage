@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const COMMON_DOMAINS = ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com', 'icloud.com', 'live.com', 'msn.com'];
 
@@ -13,6 +13,7 @@ export function EmailAutocomplete({ id, value, onChange }: {
   onChange: (v: string) => void;
 }) {
   const [focused, setFocused] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   const atIndex = value.indexOf('@');
   const localPart = atIndex >= 0 ? value.slice(0, atIndex) : value;
@@ -21,6 +22,34 @@ export function EmailAutocomplete({ id, value, onChange }: {
     atIndex >= 0 && localPart
       ? COMMON_DOMAINS.filter(d => d.startsWith(typedDomain.toLowerCase()) && d !== typedDomain.toLowerCase())
       : [];
+
+  // Whatever was highlighted no longer matches the new suggestion list once
+  // the user keeps typing, so drop back to "nothing highlighted" instead of
+  // pointing at a stale index.
+  useEffect(() => {
+    setHighlightedIndex(-1);
+  }, [value]);
+
+  function selectDomain(domain: string) {
+    onChange(`${localPart}@${domain}`);
+    setHighlightedIndex(-1);
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (!suggestions.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightedIndex(i => (i + 1) % suggestions.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightedIndex(i => (i <= 0 ? suggestions.length - 1 : i - 1));
+    } else if (e.key === 'Enter' && highlightedIndex >= 0) {
+      e.preventDefault();
+      selectDomain(suggestions[highlightedIndex]);
+    } else if (e.key === 'Escape') {
+      setFocused(false);
+    }
+  }
 
   return (
     <div className="relative">
@@ -36,6 +65,7 @@ export function EmailAutocomplete({ id, value, onChange }: {
         // suggestion's own onClick fire before blur closes the dropdown out
         // from under it.
         onBlur={() => setTimeout(() => setFocused(false), 150)}
+        onKeyDown={handleKeyDown}
         autoComplete="off"
         autoCapitalize="none"
         spellCheck={false}
@@ -47,10 +77,11 @@ export function EmailAutocomplete({ id, value, onChange }: {
             <button
               key={domain}
               type="button"
-              onClick={() => onChange(`${localPart}@${domain}`)}
-              className={`w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 transition ${
-                i < suggestions.length - 1 ? 'border-b border-gray-100 dark:border-white/5' : ''
-              }`}
+              onClick={() => selectDomain(domain)}
+              onMouseEnter={() => setHighlightedIndex(i)}
+              className={`w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 transition ${
+                i === highlightedIndex ? 'bg-gray-50 dark:bg-white/5' : 'hover:bg-gray-50 dark:hover:bg-white/5'
+              } ${i < suggestions.length - 1 ? 'border-b border-gray-100 dark:border-white/5' : ''}`}
             >
               {localPart}@<span className="font-medium">{domain}</span>
             </button>
