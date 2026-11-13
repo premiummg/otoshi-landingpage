@@ -34,7 +34,7 @@ export const H1_INK = 'text-[#14151A] dark:text-white';
 export const BODY_INK = 'text-gray-600 dark:text-gray-400';
 
 export const PHONE = '(438) 881-7766';
-export const EMAIL = 'judo.otoshi.dieppe@gmail.com';
+export { CLUB_EMAIL as EMAIL } from './contact';
 export const MEDIA = '/media';
 
 // Every photo in public/media/ also exists as a WebP, generated at the size

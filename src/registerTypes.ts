@@ -12,13 +12,10 @@ export interface Participant {
   dob: string; // yyyy-MM-dd
   gender: 'male' | 'female' | '';
   notes: string;
-  // Adults only, ignored for kids: Malcolm confirmed parents get 50% off
-  // when the household already has a kid registered at the club.
-  parentDiscount: boolean;
 }
 
 export function emptyParticipant(): Participant {
-  return { classKey: '', scheduleKey: '', firstName: '', lastName: '', dob: '', gender: '', notes: '', parentDiscount: false };
+  return { classKey: '', scheduleKey: '', firstName: '', lastName: '', dob: '', gender: '', notes: '' };
 }
 
 export interface RegisterFormData {
@@ -43,8 +40,16 @@ export interface RegisterFormData {
   adults: Participant[];
   agreedJudoNb: boolean;
   agreedClub: boolean;
-  // Which site language the family used - only so the Square checkout can
-  // send them back to the matching /register page afterwards.
+}
+
+// What the browser actually POSTs: the form plus a few request-level fields.
+export interface RegisterRequest extends RegisterFormData {
+  // Generated once per page load; the server shows its first 8 characters as
+  // the registration's reference in the club email and on the Square order.
+  submissionId: string;
+  turnstileToken?: string;
+  // Which site language the family used, so Square can send them back to the
+  // matching /register page after paying.
   lang?: 'en' | 'fr';
 }
 

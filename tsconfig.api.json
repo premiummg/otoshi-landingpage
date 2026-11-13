@@ -10,5 +10,5 @@
     "strict": true,
     "noEmit": true
   },
-  "include": ["api", "src/registerTypes.ts", "src/registerData.ts"]
+  "include": ["api", "tests", "src/registerTypes.ts", "src/registerData.ts", "src/contact.ts", "src/formLimits.ts"]
 }

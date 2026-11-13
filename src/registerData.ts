@@ -6,6 +6,9 @@
 // - Adults get 50% off when the household already has a kid registered.
 export interface ScheduleOption {
   key: string;
+  // English only, and it is what the FR form and the club email show too.
+  // The timetable in copy.ts restates the same days/times: keep the two in
+  // sync by hand when a class changes.
   schedule: string;
   price: number;
 }
@@ -61,10 +64,10 @@ export const ADULT_LEVELS: ClassLevel[] = [
   },
 ];
 
-// Malcolm's email: "Parents get 50% off when they have a kid registered
-// already." Applied to an adult participant's price when the household
-// checks the box - see the `parentDiscount` flag on Participant.
-export const PARENT_DISCOUNT_RATE = 0.5;
+// Malcolm's email: "50% off the adult class if they have a kid in any other
+// class." Applied automatically to every adult's price whenever the same
+// registration includes at least one kid (see `adultPrices`).
+const PARENT_DISCOUNT_RATE = 0.5;
 
 // Shared by the client price summary (Step3Registration) and the email
 // (api/register.ts) so the two can't drift out of sync with each other -
@@ -74,21 +77,10 @@ export const PARENT_DISCOUNT_RATE = 0.5;
 interface PricedParticipant {
   classKey: string;
   scheduleKey: string;
-  parentDiscount: boolean;
 }
 
-export function participantFullPrice(p: PricedParticipant, levels: ClassLevel[]): number {
+function participantFullPrice(p: PricedParticipant, levels: ClassLevel[]): number {
   return levels.find(l => l.key === p.classKey)?.schedules.find(sc => sc.key === p.scheduleKey)?.price ?? 0;
-}
-
-// How much a participant's parent-discount checkbox saves, in dollars - 0
-// when it isn't checked (or isn't applicable, as for kids).
-export function participantDiscount(p: PricedParticipant, levels: ClassLevel[]): number {
-  return p.parentDiscount ? participantFullPrice(p, levels) * (1 - PARENT_DISCOUNT_RATE) : 0;
-}
-
-export function participantPrice(p: PricedParticipant, levels: ClassLevel[]): number {
-  return participantFullPrice(p, levels) - participantDiscount(p, levels);
 }
 
 // Malcolm's email: "15% off for any other sibling in judo (the highest price
@@ -98,7 +90,7 @@ export function participantPrice(p: PricedParticipant, levels: ClassLevel[]): nu
 // and every other kid gets 15% off their own price. A tie for highest means
 // the first of them pays full. Does NOT apply to adults (they have the 50%
 // parent discount above instead).
-export const SIBLING_DISCOUNT_RATE = 0.15;
+const SIBLING_DISCOUNT_RATE = 0.15;
 
 export interface PricedKid {
   full: number;
@@ -119,24 +111,58 @@ export function kidPrices(kids: PricedParticipant[]): PricedKid[] {
 // the registration email and the Square checkout, so the three can't drift.
 export function registrationTotals(data: { kids: PricedParticipant[]; adults: PricedParticipant[] }) {
   const kids = kidPrices(data.kids);
+  const adults = adultPrices(data.adults, data.kids.length > 0);
   const fullSubtotal =
     kids.reduce((sum, k) => sum + k.full, 0) +
-    data.adults.reduce((sum, p) => sum + participantFullPrice(p, ADULT_LEVELS), 0);
+    adults.reduce((sum, a) => sum + a.full, 0);
   const siblingDiscount = kids.reduce((sum, k) => sum + k.discount, 0);
-  const parentDiscount = data.adults.reduce((sum, p) => sum + participantDiscount(p, ADULT_LEVELS), 0);
-  const subtotal = fullSubtotal - siblingDiscount - parentDiscount;
-  const fee = squareFee(subtotal);
-  return { fullSubtotal, siblingDiscount, parentDiscount, subtotal, fee, total: subtotal + fee };
+  const parentDiscount = adults.reduce((sum, a) => sum + a.discount, 0);
+  const subtotalCents = Math.round((fullSubtotal - siblingDiscount - parentDiscount) * 100);
+  const feeCents = Math.round(squareFee(subtotalCents / 100) * 100);
+  // Everything shown (summary, email) and everything charged derives from
+  // these same two integers, so they can never differ by a cent.
+  const totalCents = subtotalCents + feeCents;
+  return {
+    fullSubtotal, siblingDiscount, parentDiscount,
+    subtotal: subtotalCents / 100,
+    fee: feeCents / 100,
+    total: totalCents / 100,
+    totalCents,
+  };
+}
+
+export interface PricedAdult {
+  full: number;
+  discount: number;
+  price: number;
+}
+
+export function adultPrices(adults: PricedParticipant[], hasKids: boolean): PricedAdult[] {
+  return adults.map(p => {
+    const full = participantFullPrice(p, ADULT_LEVELS);
+    const discount = hasKids ? full * PARENT_DISCOUNT_RATE : 0;
+    return { full, discount, price: full - discount };
+  });
 }
 
 export const MAX_KIDS = 5;
 export const MAX_ADULTS = 5;
 
-// Square's own published rate for an online/invoiced transaction in Canada.
-// Confirmed by Malcolm's email as the payment processor, not yet confirmed
-// with real Square credentials - kept here rather than hardcoded in the form
-// so there's one place to update if the club's actual Square plan turns out
-// to charge a different rate.
+// Square's published rate for an online card transaction in Canada: 3% plus
+// 30 cents. Kept here, not hardcoded in the form, so there is one place to
+// update if the club's actual Square plan charges something different.
+const SQUARE_RATE_PERCENT = 3;
+const SQUARE_FIXED_CENTS = 30;
+
+// Whole-cent arithmetic on purpose: `subtotal * 0.03` in floating point can
+// land a hair under a half-cent tie (13650 * 0.03 = 409.49999999999994), which
+// would round the wrong way. Multiplying integers first keeps the tie exact.
 export function squareFee(subtotal: number): number {
-  return subtotal * 0.03 + 0.3;
+  const subtotalCents = Math.round(subtotal * 100);
+  return (Math.round((subtotalCents * SQUARE_RATE_PERCENT) / 100) + SQUARE_FIXED_CENTS) / 100;
 }
+
+// Percent for display ("15", "50"), straight from the real discount rates so
+// the copy can't disagree with the maths.
+export const SIBLING_PERCENT = Math.round(SIBLING_DISCOUNT_RATE * 100);
+export const PARENT_PERCENT = Math.round(PARENT_DISCOUNT_RATE * 100);
