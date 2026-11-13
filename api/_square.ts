@@ -41,13 +41,15 @@ export function squareConfig(): SquareConfig | null {
   };
 }
 
-interface SquareApiError { category?: string; code?: string; detail?: string }
+interface SquareApiError { category?: string; code?: string; detail?: string; field?: string }
 
 export class SquareError extends Error {
-  constructor(public status: number, public errors: SquareApiError[]) {
-    // Codes only. Square's `detail` strings can echo what we sent (an email
-    // address), and error messages end up in Vercel's logs.
-    super(errors.map(e => e.code).filter(Boolean).join(', ') || `Square request failed (${status})`);
+  constructor(public status: number, public errors: SquareApiError[], public path = '') {
+    // Codes, the name of the offending field and the endpoint. Never `detail`:
+    // Square's detail strings can echo what we sent (an email address), and
+    // error messages end up in Vercel's logs.
+    super((errors.map(e => (e.field ? `${e.code} field=${e.field}` : e.code)).filter(Boolean).join(', ') || `Square request failed (${status})`)
+      + (path ? ` @ ${path.split('?')[0]}` : ''));
   }
 }
 
@@ -69,7 +71,7 @@ async function squareFetch<T>(cfg: SquareConfig, method: 'GET' | 'POST', path: s
     signal: cfg.signal,
   });
   const json = (await res.json()) as T & { errors?: SquareApiError[] };
-  if (!res.ok) throw new SquareError(res.status, json.errors ?? []);
+  if (!res.ok) throw new SquareError(res.status, json.errors ?? [], path);
   return json;
 }
 
