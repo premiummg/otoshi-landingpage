@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { LIMITS } from '../../formLimits';
 
 const COMMON_DOMAINS = ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com', 'icloud.com', 'live.com', 'msn.com'];
 
@@ -58,6 +59,7 @@ export function EmailAutocomplete({ id, value, onChange }: {
         type="email"
         data-1p-ignore
         className="input-field"
+        maxLength={LIMITS.email}
         value={value}
         onChange={e => onChange(e.target.value)}
         onFocus={() => setFocused(true)}

@@ -5,6 +5,9 @@
 // refuses to build if a French string is ever missing rather than silently
 // falling back to English at runtime.
 
+import { CLUB_EMAIL } from './contact';
+import { PARENT_PERCENT, SIBLING_PERCENT } from './registerData';
+
 export const EN = {
   code: 'EN',
   langName: 'English',
@@ -88,7 +91,7 @@ export const EN = {
         body: 'All levels welcomed. Strength, discipline, and real self-defense, on your own schedule.',
         long: [
           'Adult welcomes every level, from a first-timer walking onto the mat to someone returning to the sport after years away. Classes cover real self-defense, judo’s throws and groundwork, and a serious workout, at whatever pace fits you.',
-          'Parents who already have a kid registered at the club get 50% off their own Adult registration.',
+          `Parents who already have a kid registered at the club get ${PARENT_PERCENT}% off their own Adult registration.`,
         ],
         classNames: ['Adults/Teens'],
       },
@@ -188,7 +191,6 @@ export const EN = {
   },
   footer: {
     affiliation: 'Proudly supported by',
-    bonaFideNote: 'logo to be confirmed',
     rights: 'Judo Otoshi. All rights reserved.',
     terms: 'Terms of Use',
     privacy: 'Privacy Policy',
@@ -228,7 +230,6 @@ export const EN = {
       chooseClass: 'Choose a class…',
       chooseClassFirst: 'Choose a class first…',
       schedulePrice: 'Schedule & Price',
-      parentDiscount: 'I already have a child registered at the club (50% off this registration)',
       firstName: 'First Name',
       lastName: 'Last Name',
       dob: 'Date of Birth',
@@ -239,11 +240,12 @@ export const EN = {
       notesHint: 'Optional',
       atLeastOneClass: 'Select at least one class to continue.',
       subtotal: 'Subtotal',
-      siblingDiscountLine: 'Sibling discount (15%)',
-      parentDiscountLine: 'Parent discount (50%)',
+      siblingDiscountLine: `Sibling discount (${SIBLING_PERCENT}%)`,
+      parentDiscountLine: `Parent discount (${PARENT_PERCENT}%)`,
       fee: 'Square processing fee',
       total: 'Total',
-      pricingNote: 'Monthly tuition. After you submit, you’ll be taken to Square to pay securely.',
+      pricingNote: `Monthly tuition, charged to your card every month until you cancel. Adults get ${PARENT_PERCENT}% off when a child is also registered.`,
+      pricingNoteOffline: 'Monthly tuition. The club will contact you separately to arrange payment.',
     },
     step4: {
       title: 'Required Agreements',
@@ -265,6 +267,14 @@ export const EN = {
       agree: 'I have read and agree to the above',
       mustAgree: 'Both waivers must be checked to submit your registration.',
     },
+    payment: {
+      title: 'Payment',
+      note: `After you submit, you’ll be taken to Square’s secure page to pay {amount} today. The same amount is then charged every month until you cancel. To cancel, email ${CLUB_EMAIL}.`,
+      captcha: 'Please complete the verification and try again.',
+      tooMany: 'Too many attempts. Please wait a few minutes and try again.',
+      reload: 'The page could not finish loading. Please refresh and try again.',
+    },
+    tooLong: 'That is too long - please shorten it.',
     stepNav: { next: 'Next', back: 'Back', submit: 'Submit Registration', submitting: 'Sending…' },
     required: 'This field is required.',
     invalidEmail: 'Enter a valid email address.',
@@ -272,7 +282,7 @@ export const EN = {
     success: {
       title: 'Registration received!',
       body: 'We’ve sent your registration to the Otoshi team - they’ll be in touch shortly.',
-      paidNote: 'Thank you! Once your payment is complete, Square will email you a receipt.',
+      paidNote: `Thank you! If your payment went through, Square will email you a receipt. To cancel, email ${CLUB_EMAIL}.`,
       paymentNote: 'Payment isn’t collected here yet. The club will follow up separately about paying through Square.',
       backHome: 'Back to home',
     },
@@ -297,7 +307,7 @@ export const EN = {
     },
     register: {
       title: 'Register for Judo Classes | Judo Otoshi Dieppe',
-      description: 'Sign up for judo at Club Otoshi in Dieppe, NB. Pick your class and schedule, register the whole family, and get 50% off an adult registration.',
+      description: `Sign up for judo at Club Otoshi in Dieppe, NB. Pick your class and schedule, register the whole family, and get ${PARENT_PERCENT}% off an adult registration.`,
     },
     program: {
       title: '{name} Judo Classes in Dieppe, NB | Judo Otoshi',
@@ -384,7 +394,7 @@ export const FR: Copy = {
         body: 'Tous les niveaux sont bienvenus. Force, discipline et défense personnelle réelle, selon votre horaire.',
         long: [
           'Adulte accueille tous les niveaux, du débutant qui monte sur le tatami pour la première fois à celui qui revient au sport après plusieurs années d’absence. Les cours couvrent la vraie défense personnelle, les projections et le travail au sol du judo, ainsi qu’un entraînement sérieux, selon votre propre rythme.',
-          'Les parents qui ont déjà un enfant inscrit au club obtiennent 50 % de rabais sur leur propre inscription Adulte.',
+          `Les parents qui ont déjà un enfant inscrit au club obtiennent ${PARENT_PERCENT} % de rabais sur leur propre inscription Adulte.`,
         ],
         classNames: ['Adultes/Ados'],
       },
@@ -481,7 +491,6 @@ export const FR: Copy = {
   },
   footer: {
     affiliation: 'Fièrement soutenu par',
-    bonaFideNote: 'logo à confirmer',
     rights: 'Judo Otoshi. Tous droits réservés.',
     terms: 'Conditions d’utilisation',
     privacy: 'Politique de confidentialité',
@@ -521,7 +530,6 @@ export const FR: Copy = {
       chooseClass: 'Choisir un cours…',
       chooseClassFirst: 'Choisir un cours d’abord…',
       schedulePrice: 'Horaire et prix',
-      parentDiscount: 'J’ai déjà un enfant inscrit au club (50 % de rabais sur cette inscription)',
       firstName: 'Prénom',
       lastName: 'Nom de famille',
       dob: 'Date de naissance',
@@ -532,11 +540,12 @@ export const FR: Copy = {
       notesHint: 'Optionnel',
       atLeastOneClass: 'Sélectionnez au moins un cours pour continuer.',
       subtotal: 'Sous-total',
-      siblingDiscountLine: 'Rabais fratrie (15 %)',
-      parentDiscountLine: 'Rabais parent (50 %)',
+      siblingDiscountLine: `Rabais fratrie (${SIBLING_PERCENT} %)`,
+      parentDiscountLine: `Rabais parent (${PARENT_PERCENT} %)`,
       fee: 'Frais de traitement Square',
       total: 'Total',
-      pricingNote: 'Frais mensuels. Après l’envoi, vous serez redirigé vers Square pour payer de façon sécurisée.',
+      pricingNote: `Frais mensuels, prélevés sur votre carte chaque mois jusqu’à l’annulation. Les adultes ont ${PARENT_PERCENT} % de rabais lorsqu’un enfant est aussi inscrit.`,
+      pricingNoteOffline: 'Frais mensuels. Le club communiquera avec vous séparément pour organiser le paiement.',
     },
     step4: {
       title: 'Ententes requises',
@@ -564,6 +573,14 @@ export const FR: Copy = {
       agree: 'J’ai lu et j’accepte ce qui précède',
       mustAgree: 'Les deux décharges doivent être cochées pour soumettre votre inscription.',
     },
+    payment: {
+      title: 'Paiement',
+      note: `Après l’envoi, vous serez dirigé vers la page sécurisée de Square pour payer {amount} aujourd’hui. Le même montant sera ensuite prélevé chaque mois jusqu’à l’annulation. Pour annuler, écrivez à ${CLUB_EMAIL}.`,
+      captcha: 'Veuillez terminer la vérification et réessayer.',
+      tooMany: 'Trop de tentatives. Veuillez patienter quelques minutes et réessayer.',
+      reload: 'La page n’a pas pu se charger complètement. Rafraîchissez-la et réessayez.',
+    },
+    tooLong: 'C’est trop long - veuillez raccourcir.',
     stepNav: { next: 'Suivant', back: 'Retour', submit: 'Soumettre l’inscription', submitting: 'Envoi en cours…' },
     required: 'Ce champ est requis.',
     invalidEmail: 'Entrez une adresse courriel valide.',
@@ -571,7 +588,7 @@ export const FR: Copy = {
     success: {
       title: 'Inscription reçue!',
       body: 'Nous avons envoyé votre inscription à l’équipe d’Otoshi - elle communiquera avec vous sous peu.',
-      paidNote: 'Merci! Une fois votre paiement terminé, Square vous enverra un reçu par courriel.',
+      paidNote: `Merci! Si votre paiement a bien été effectué, Square vous enverra un reçu par courriel. Pour annuler, écrivez à ${CLUB_EMAIL}.`,
       paymentNote: 'Le paiement n’est pas encore collecté ici. Le club vous contactera séparément au sujet du paiement par Square.',
       backHome: 'Retour à l’accueil',
     },
@@ -587,7 +604,7 @@ export const FR: Copy = {
     },
     register: {
       title: 'Inscription aux cours de judo | Judo Otoshi Dieppe',
-      description: 'Inscrivez-vous au judo au Club Otoshi de Dieppe, N.-B. Choisissez votre cours et votre horaire, inscrivez toute la famille, 50 % de rabais pour un adulte.',
+      description: `Inscrivez-vous au judo au Club Otoshi de Dieppe, N.-B. Choisissez votre cours et votre horaire, inscrivez toute la famille, ${PARENT_PERCENT} % de rabais pour un adulte.`,
     },
     program: {
       title: 'Cours de judo {name} à Dieppe, N.-B. | Judo Otoshi',

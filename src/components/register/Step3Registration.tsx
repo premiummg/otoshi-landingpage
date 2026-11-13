@@ -8,12 +8,14 @@ import {
 import { resizeParticipants } from '../../registerTypes';
 import type { RegisterFormData } from '../../registerTypes';
 
-export function Step3Registration({ data, setData, kidsErrors, adultsErrors, atLeastOneClassError }: {
+export function Step3Registration({ data, setData, kidsErrors, adultsErrors, atLeastOneClassError, squareEnabled }: {
   data: RegisterFormData;
   setData: (fn: (d: RegisterFormData) => RegisterFormData) => void;
   kidsErrors: Record<string, string>[];
   adultsErrors: Record<string, string>[];
   atLeastOneClassError?: string;
+  // Whether online payment is switched on; decides which pricing note fits.
+  squareEnabled?: boolean;
 }) {
   const t = useT();
   const s = t.register.step3;
@@ -104,7 +106,6 @@ export function Step3Registration({ data, setData, kidsErrors, adultsErrors, atL
           index={data.kids.length + i}
           label={`${s.participant} - ${s.adultLabel} ${i + 1}`}
           levels={ADULT_LEVELS}
-          showParentDiscount
           value={p}
           onChange={next => setData(d => ({ ...d, adults: d.adults.map((a, idx) => idx === i ? next : a) }))}
           errors={adultsErrors[i] ?? {}}
@@ -136,7 +137,7 @@ export function Step3Registration({ data, setData, kidsErrors, adultsErrors, atL
           <span className="text-(--premium-black) dark:text-white">{s.total}</span>
           <span className="pmg-figure text-(--premium-black) dark:text-white">${total.toFixed(2)}</span>
         </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400 pt-1">{s.pricingNote}</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 pt-1">{squareEnabled ? s.pricingNote : s.pricingNoteOffline}</p>
       </Card>
     </div>
   );

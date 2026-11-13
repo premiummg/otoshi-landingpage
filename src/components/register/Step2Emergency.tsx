@@ -2,6 +2,7 @@ import { Card } from '@premiummg/ui';
 import { useT } from '../../lang';
 import { Field } from './Field';
 import { PhoneField } from './PhoneField';
+import { LIMITS } from '../../formLimits';
 import type { RegisterFormData } from '../../registerTypes';
 
 export function Step2Emergency({ data, setData, errors }: {
@@ -21,12 +22,12 @@ export function Step2Emergency({ data, setData, errors }: {
       <h2 className="font-heading font-extrabold text-lg text-(--premium-black) dark:text-white">{s.title}</h2>
 
       <Field label={s.name} htmlFor="e-name" required error={errors.name}>
-        <input id="e-name" data-1p-ignore className="input-field" value={data.emergency.name}
+        <input id="e-name" data-1p-ignore className="input-field" maxLength={LIMITS.emergencyName} value={data.emergency.name}
                onChange={e => set('name', e.target.value)} />
       </Field>
 
       <Field label={s.relationship} htmlFor="e-relationship" required error={errors.relationship}>
-        <input id="e-relationship" data-1p-ignore className="input-field" value={data.emergency.relationship}
+        <input id="e-relationship" data-1p-ignore className="input-field" maxLength={LIMITS.relationship} value={data.emergency.relationship}
                onChange={e => set('relationship', e.target.value)} />
       </Field>
 

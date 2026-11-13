@@ -2,17 +2,17 @@ import { DatePicker, Card } from '@premiummg/ui';
 import { useT } from '../../lang';
 import { Field } from './Field';
 import { NAVY } from '../../palette';
+import { LIMITS } from '../../formLimits';
 import type { ClassLevel } from '../../registerData';
 import type { Participant } from '../../registerTypes';
 
 // One participant's fields (kid or adult) - the level list is the only
 // thing that differs between the two, so this renders both from one place
 // rather than two near-identical copies.
-export function ParticipantFields({ index, label, levels, showParentDiscount, value, onChange, errors }: {
+export function ParticipantFields({ index, label, levels, value, onChange, errors }: {
   index: number;
   label: string;
   levels: ClassLevel[];
-  showParentDiscount?: boolean;
   value: Participant;
   onChange: (next: Participant) => void;
   errors: Record<string, string>;
@@ -66,21 +66,13 @@ export function ParticipantFields({ index, label, levels, showParentDiscount, va
         </select>
       </Field>
 
-      {showParentDiscount && (
-        <label className="flex items-start gap-2.5 text-sm text-gray-600 dark:text-gray-300">
-          <input type="checkbox" className="mt-0.5" checked={value.parentDiscount}
-                 onChange={e => set('parentDiscount', e.target.checked)} />
-          <span>{s.parentDiscount}</span>
-        </label>
-      )}
-
       <div className="grid sm:grid-cols-2 gap-4">
         <Field label={s.firstName} htmlFor={`${prefix}-first`} required error={errors.firstName}>
-          <input id={`${prefix}-first`} data-1p-ignore className="input-field" value={value.firstName}
+          <input id={`${prefix}-first`} data-1p-ignore className="input-field" maxLength={LIMITS.name} value={value.firstName}
                  onChange={e => set('firstName', e.target.value)} />
         </Field>
         <Field label={s.lastName} htmlFor={`${prefix}-last`} required error={errors.lastName}>
-          <input id={`${prefix}-last`} data-1p-ignore className="input-field" value={value.lastName}
+          <input id={`${prefix}-last`} data-1p-ignore className="input-field" maxLength={LIMITS.name} value={value.lastName}
                  onChange={e => set('lastName', e.target.value)} />
         </Field>
       </div>
@@ -112,7 +104,7 @@ export function ParticipantFields({ index, label, levels, showParentDiscount, va
       </div>
 
       <Field label={s.notes} htmlFor={`${prefix}-notes`} optional>
-        <textarea id={`${prefix}-notes`} className="input-field" rows={2} value={value.notes}
+        <textarea id={`${prefix}-notes`} className="input-field" maxLength={LIMITS.notes} rows={2} value={value.notes}
                   onChange={e => set('notes', e.target.value)} />
         <p className="text-xs text-gray-400 dark:text-gray-500 mt-1.5">{s.notesHint}</p>
       </Field>

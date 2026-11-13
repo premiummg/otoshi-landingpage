@@ -1,8 +1,9 @@
 import { isValidPhoneNumber } from 'react-phone-number-input';
+import { EMAIL_PATTERN } from '../formLimits';
 
-// Deliberately simple (not the full RFC 5322 grammar) - good enough to catch
-// a typo like a missing "@" or domain without rejecting real addresses.
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Same pattern the server enforces (src/formLimits.ts), so the form can't
+// accept an address the server will then reject.
+const EMAIL_RE = EMAIL_PATTERN;
 
 export function isValidEmail(value: string): boolean {
   return EMAIL_RE.test(value.trim());

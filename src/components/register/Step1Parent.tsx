@@ -3,6 +3,7 @@ import { useT } from '../../lang';
 import { Field } from './Field';
 import { EmailAutocomplete } from './EmailAutocomplete';
 import { PhoneField } from './PhoneField';
+import { LIMITS } from '../../formLimits';
 import type { RegisterFormData } from '../../registerTypes';
 
 export function Step1Parent({ data, setData, errors }: {
@@ -39,11 +40,11 @@ export function Step1Parent({ data, setData, errors }: {
 
       <div className="grid sm:grid-cols-2 gap-5">
         <Field label={s.firstName} htmlFor="p-firstName" required error={errors.firstName}>
-          <input id="p-firstName" data-1p-ignore className="input-field" value={data.parent.firstName}
+          <input id="p-firstName" data-1p-ignore className="input-field" maxLength={LIMITS.name} value={data.parent.firstName}
                  onChange={e => set('firstName', e.target.value)} />
         </Field>
         <Field label={s.lastName} htmlFor="p-lastName" required error={errors.lastName}>
-          <input id="p-lastName" data-1p-ignore className="input-field" value={data.parent.lastName}
+          <input id="p-lastName" data-1p-ignore className="input-field" maxLength={LIMITS.name} value={data.parent.lastName}
                  onChange={e => set('lastName', e.target.value)} />
         </Field>
       </div>
@@ -72,15 +73,15 @@ export function Step1Parent({ data, setData, errors }: {
 
       <div className="grid sm:grid-cols-3 gap-5">
         <Field label={s.city} htmlFor="p-city" required error={errors.city}>
-          <input id="p-city" data-1p-ignore className="input-field" value={data.parent.city}
+          <input id="p-city" data-1p-ignore className="input-field" maxLength={LIMITS.city} value={data.parent.city}
                  onChange={e => set('city', e.target.value)} />
         </Field>
         <Field label={s.province} htmlFor="p-province" required error={errors.province}>
-          <input id="p-province" data-1p-ignore className="input-field" value={data.parent.province}
+          <input id="p-province" data-1p-ignore className="input-field" maxLength={LIMITS.province} value={data.parent.province}
                  onChange={e => set('province', e.target.value)} />
         </Field>
         <Field label={s.postalCode} htmlFor="p-postalCode" required error={errors.postalCode}>
-          <input id="p-postalCode" data-1p-ignore className="input-field" value={data.parent.postalCode}
+          <input id="p-postalCode" data-1p-ignore className="input-field" maxLength={LIMITS.postalCode} value={data.parent.postalCode}
                  onChange={e => set('postalCode', e.target.value)} />
         </Field>
       </div>
