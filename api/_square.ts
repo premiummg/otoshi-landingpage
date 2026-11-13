@@ -48,7 +48,10 @@ export class SquareError extends Error {
     // Codes, the name of the offending field and the endpoint. Never `detail`:
     // Square's detail strings can echo what we sent (an email address), and
     // error messages end up in Vercel's logs.
-    super((errors.map(e => (e.field ? `${e.code} field=${e.field}` : e.code)).filter(Boolean).join(', ') || `Square request failed (${status})`)
+    // Square often puts the useful part ("redirect_url must ...") only in
+    // `detail`, so it is logged with anything email-shaped blanked out.
+    const detail = (e: SquareApiError) => (e.detail ? ` "${e.detail.replace(/\S+@\S+/g, '[email]').slice(0, 200)}"` : '');
+    super((errors.map(e => `${e.code}${e.field ? ` field=${e.field}` : ''}${detail(e)}`).filter(Boolean).join(', ') || `Square request failed (${status})`)
       + (path ? ` @ ${path.split('?')[0]}` : ''));
   }
 }
