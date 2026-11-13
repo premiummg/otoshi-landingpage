@@ -91,6 +91,44 @@ export function participantPrice(p: PricedParticipant, levels: ClassLevel[]): nu
   return participantFullPrice(p, levels) - participantDiscount(p, levels);
 }
 
+// Malcolm's email: "15% off for any other sibling in judo (the highest price
+// class pays full class. Ex: two kids, one in elite and the other in
+// beginner, elite pays in full, beginner has 15% off)." Read literally: in
+// any household with several kids, the single highest-priced kid pays full
+// and every other kid gets 15% off their own price. A tie for highest means
+// the first of them pays full. Does NOT apply to adults (they have the 50%
+// parent discount above instead).
+export const SIBLING_DISCOUNT_RATE = 0.15;
+
+export interface PricedKid {
+  full: number;
+  discount: number;
+  price: number;
+}
+
+export function kidPrices(kids: PricedParticipant[]): PricedKid[] {
+  const fulls = kids.map(k => participantFullPrice(k, KIDS_LEVELS));
+  const top = fulls.indexOf(Math.max(...fulls));
+  return fulls.map((full, i) => {
+    const discount = i === top ? 0 : full * SIBLING_DISCOUNT_RATE;
+    return { full, discount, price: full - discount };
+  });
+}
+
+// One source of truth for the whole price summary, used by the client form,
+// the registration email and the Square checkout, so the three can't drift.
+export function registrationTotals(data: { kids: PricedParticipant[]; adults: PricedParticipant[] }) {
+  const kids = kidPrices(data.kids);
+  const fullSubtotal =
+    kids.reduce((sum, k) => sum + k.full, 0) +
+    data.adults.reduce((sum, p) => sum + participantFullPrice(p, ADULT_LEVELS), 0);
+  const siblingDiscount = kids.reduce((sum, k) => sum + k.discount, 0);
+  const parentDiscount = data.adults.reduce((sum, p) => sum + participantDiscount(p, ADULT_LEVELS), 0);
+  const subtotal = fullSubtotal - siblingDiscount - parentDiscount;
+  const fee = squareFee(subtotal);
+  return { fullSubtotal, siblingDiscount, parentDiscount, subtotal, fee, total: subtotal + fee };
+}
+
 export const MAX_KIDS = 5;
 export const MAX_ADULTS = 5;
 

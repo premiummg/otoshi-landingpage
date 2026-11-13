@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { SiteButton } from '@premiummg/ui';
@@ -74,6 +74,16 @@ function RegisterForm({ lang, setLang, isDark, toggleTheme }: PageProps) {
   const [atLeastOneClassError, setAtLeastOneClassError] = useState<string>();
   const [agreementError, setAgreementError] = useState<string>();
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  // True once Square has sent the family back here after paying. Read in an
+  // effect, not during render, so the prerendered HTML and the first client
+  // render agree (the query string only exists in the browser).
+  const [paid, setPaid] = useState(false);
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get('paid') === '1') {
+      setPaid(true);
+      setStatus('success');
+    }
+  }, []);
 
   const required = t.register.required;
 
@@ -153,9 +163,16 @@ function RegisterForm({ lang, setLang, isDark, toggleTheme }: PageProps) {
       const res = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, lang: lang === 'fr' ? 'fr' : 'en' }),
       });
       if (!res.ok) throw new Error('Request failed');
+      const { paymentUrl } = (await res.json()) as { paymentUrl?: string };
+      if (paymentUrl) {
+        // Hand off to Square's hosted checkout. Stay in 'submitting' so the
+        // button can't be pressed twice while the browser navigates away.
+        window.location.assign(paymentUrl);
+        return;
+      }
       setStatus('success');
     } catch {
       setStatus('error');
@@ -169,7 +186,7 @@ function RegisterForm({ lang, setLang, isDark, toggleTheme }: PageProps) {
         <div className="max-w-lg mx-auto px-6 py-24 text-center">
           <h1 className="font-heading font-black text-2xl text-(--premium-black) dark:text-white">{t.register.success.title}</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-3 leading-relaxed">{t.register.success.body}</p>
-          <p className="text-sm text-amber-600 dark:text-amber-400 mt-4 leading-relaxed">{t.register.success.paymentNote}</p>
+          <p className={`text-sm mt-4 leading-relaxed ${paid ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400'}`}>{paid ? t.register.success.paidNote : t.register.success.paymentNote}</p>
           <Link to={href('/')} className="inline-block mt-8">
             <SiteButton>{t.register.success.backHome}</SiteButton>
           </Link>

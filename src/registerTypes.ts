@@ -43,6 +43,9 @@ export interface RegisterFormData {
   adults: Participant[];
   agreedJudoNb: boolean;
   agreedClub: boolean;
+  // Which site language the family used - only so the Square checkout can
+  // send them back to the matching /register page afterwards.
+  lang?: 'en' | 'fr';
 }
 
 export function emptyRegisterForm(): RegisterFormData {

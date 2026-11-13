@@ -1,8 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { randomUUID } from 'node:crypto';
 import { Resend } from 'resend';
 import type { RegisterFormData, Participant } from '../src/registerTypes.js';
 import {
-  ADULT_LEVELS, KIDS_LEVELS, participantDiscount, participantFullPrice, participantPrice, squareFee,
+  ADULT_LEVELS, KIDS_LEVELS, kidPrices, participantPrice, registrationTotals,
 } from '../src/registerData.js';
 import type { ClassLevel } from '../src/registerData.js';
 
@@ -16,9 +17,102 @@ function scheduleInfo(p: Participant, levels: ClassLevel[]) {
   return levels.find(l => l.key === p.classKey)?.schedules.find(sc => sc.key === p.scheduleKey);
 }
 
-function participantRow(p: Participant, levels: ClassLevel[]): string {
+interface PaymentLink {
+  url: string;
+  orderId: string;
+}
+
+// Prices are recomputed here from registerData.ts, never taken from the
+// browser: the client only tells us WHICH class/schedule each person picked,
+// so a tampered request can't change what Square charges.
+function buildLineItems(data: RegisterFormData) {
+  const items: { name: string; cents: number }[] = [];
+  const add = (p: Participant, levels: ClassLevel[], price: number, note: string) => {
+    const sched = scheduleInfo(p, levels);
+    items.push({
+      name: `${p.firstName} ${p.lastName} - ${levelName(p.classKey, levels)}${sched ? ` (${sched.schedule})` : ''}${note}`.slice(0, 512),
+      cents: Math.round(price * 100),
+    });
+  };
+  const kids = kidPrices(data.kids);
+  data.kids.forEach((p, i) => add(p, KIDS_LEVELS, kids[i].price, kids[i].discount > 0 ? ' - 15% sibling discount' : ''));
+  data.adults.forEach(p => add(p, ADULT_LEVELS, participantPrice(p, ADULT_LEVELS), p.parentDiscount ? ' - 50% parent discount' : ''));
+  return items;
+}
+
+// Returns null (and logs) when Square isn't configured or the call fails -
+// the registration email still goes out either way, so a payment problem
+// never loses a registration; the club just follows up by hand like before.
+async function createSquarePaymentLink(
+  data: RegisterFormData, reference: string, origin: string,
+): Promise<PaymentLink | null> {
+  const token = process.env.SQUARE_ACCESS_TOKEN;
+  const locationId = process.env.SQUARE_LOCATION_ID;
+  if (!token || !locationId) return null;
+
+  const items = buildLineItems(data);
+  if (items.length === 0 || items.some(i => i.cents <= 0)) {
+    console.error('Registration has an unknown class/schedule - skipping Square checkout.');
+    return null;
+  }
+  const subtotalCents = items.reduce((sum, i) => sum + i.cents, 0);
+  const feeCents = Math.round(registrationTotals(data).fee * 100);
+
+  const base = process.env.SQUARE_ENVIRONMENT === 'sandbox'
+    ? 'https://connect.squareupsandbox.com'
+    : 'https://connect.squareup.com';
+  const localePrefix = data.lang === 'fr' ? '/fr' : '';
+
+  try {
+    const res = await fetch(`${base}/v2/online-checkout/payment-links`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Square-Version': '2025-10-16',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        idempotency_key: randomUUID(),
+        order: {
+          location_id: locationId,
+          reference_id: reference,
+          line_items: [
+            ...items.map(i => ({
+              name: i.name,
+              quantity: '1',
+              base_price_money: { amount: i.cents, currency: 'CAD' },
+            })),
+            {
+              name: 'Square processing fee',
+              quantity: '1',
+              base_price_money: { amount: feeCents, currency: 'CAD' },
+            },
+          ],
+        },
+        checkout_options: {
+          redirect_url: `${origin}${localePrefix}/register?paid=1`,
+          ask_for_shipping_address: false,
+        },
+        pre_populated_data: { buyer_email: data.parent.email },
+      }),
+    });
+    const body = (await res.json()) as {
+      payment_link?: { url: string; order_id: string };
+      errors?: unknown;
+    };
+    if (!res.ok || !body.payment_link) {
+      console.error('Square payment link failed:', res.status, JSON.stringify(body.errors));
+      return null;
+    }
+    return { url: body.payment_link.url, orderId: body.payment_link.order_id };
+  } catch (err) {
+    console.error('Square payment link request threw:', err);
+    return null;
+  }
+}
+
+function participantRow(p: Participant, levels: ClassLevel[], price: number, note: string): string {
   const sched = scheduleInfo(p, levels);
-  const price = participantPrice(p, levels);
   return `
     <tr>
       <td style="padding:4px 8px;border:1px solid #ddd;">${p.firstName} ${p.lastName}</td>
@@ -27,20 +121,13 @@ function participantRow(p: Participant, levels: ClassLevel[]): string {
       <td style="padding:4px 8px;border:1px solid #ddd;">${p.dob}</td>
       <td style="padding:4px 8px;border:1px solid #ddd;">${p.gender}</td>
       <td style="padding:4px 8px;border:1px solid #ddd;">${p.notes || '-'}</td>
-      <td style="padding:4px 8px;border:1px solid #ddd;">$${price.toFixed(2)}${p.parentDiscount ? ' (50% parent discount)' : ''}</td>
+      <td style="padding:4px 8px;border:1px solid #ddd;">$${price.toFixed(2)}${note}</td>
     </tr>`;
 }
 
-function buildEmailHtml(data: RegisterFormData): string {
-  const fullSubtotal =
-    data.kids.reduce((sum, p) => sum + participantFullPrice(p, KIDS_LEVELS), 0) +
-    data.adults.reduce((sum, p) => sum + participantFullPrice(p, ADULT_LEVELS), 0);
-  const discount =
-    data.kids.reduce((sum, p) => sum + participantDiscount(p, KIDS_LEVELS), 0) +
-    data.adults.reduce((sum, p) => sum + participantDiscount(p, ADULT_LEVELS), 0);
-  const subtotal = fullSubtotal - discount;
-  const fee = squareFee(subtotal);
-  const total = subtotal + fee;
+function buildEmailHtml(data: RegisterFormData, reference: string, payment: PaymentLink | null): string {
+  const { fullSubtotal, siblingDiscount, parentDiscount, fee, total } = registrationTotals(data);
+  const kids = kidPrices(data.kids);
 
   return `
     <h2>New Otoshi registration</h2>
@@ -66,18 +153,22 @@ function buildEmailHtml(data: RegisterFormData): string {
         </tr>
       </thead>
       <tbody>
-        ${data.kids.map(p => participantRow(p, KIDS_LEVELS)).join('')}
-        ${data.adults.map(p => participantRow(p, ADULT_LEVELS)).join('')}
+        ${data.kids.map((p, i) => participantRow(p, KIDS_LEVELS, kids[i].price, kids[i].discount > 0 ? ' (15% sibling discount)' : '')).join('')}
+        ${data.adults.map(p => participantRow(p, ADULT_LEVELS, participantPrice(p, ADULT_LEVELS), p.parentDiscount ? ' (50% parent discount)' : '')).join('')}
       </tbody>
     </table>
     <p>
       Subtotal: $${fullSubtotal.toFixed(2)}<br>
-      ${discount > 0 ? `Parent discount (50%): -$${discount.toFixed(2)}<br>` : ''}
+      ${siblingDiscount > 0 ? `Sibling discount (15%): -$${siblingDiscount.toFixed(2)}<br>` : ''}
+      ${parentDiscount > 0 ? `Parent discount (50%): -$${parentDiscount.toFixed(2)}<br>` : ''}
       Square fee (est.): $${fee.toFixed(2)}<br>
       <strong>Total: $${total.toFixed(2)}</strong><br>
     </p>
-    <p><strong>Payment not collected yet</strong> - Square isn't wired into the site until the club's
-      credentials are set up. Follow up with the family directly about payment.</p>
+    ${payment
+      ? `<p><strong>Sent to Square checkout.</strong> Reference <code>${reference}</code> - confirm the payment
+         landed in the Square dashboard (order ${payment.orderId}) before treating this family as paid.</p>`
+      : `<p><strong>Payment not collected</strong> - Square checkout wasn't available for this registration
+         (reference <code>${reference}</code>). Follow up with the family directly about payment.</p>`}
     <h3>Agreements</h3>
     <p>Judo NB waiver: ${data.agreedJudoNb ? 'Agreed' : 'NOT agreed'}<br>
        Club Otoshi waiver: ${data.agreedClub ? 'Agreed' : 'NOT agreed'}</p>
@@ -106,6 +197,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
+  const reference = randomUUID().slice(0, 8).toUpperCase();
+  const host = req.headers['x-forwarded-host'] ?? req.headers.host;
+  const origin = `https://${Array.isArray(host) ? host[0] : host}`;
+  const payment = await createSquarePaymentLink(data, reference, origin);
+
   try {
     const resend = new Resend(apiKey);
     const { error } = await resend.emails.send({
@@ -119,10 +215,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       to: TO,
       replyTo: data.parent.email,
       subject: `New registration - ${data.parent.firstName} ${data.parent.lastName}`,
-      html: buildEmailHtml(data),
+      html: buildEmailHtml(data, reference, payment),
     });
     if (error) throw error;
-    res.status(200).json({ ok: true });
+    res.status(200).json({ ok: true, paymentUrl: payment?.url });
   } catch (err) {
     console.error('Failed to send registration email:', err);
     res.status(502).json({ error: 'Failed to send registration email.' });

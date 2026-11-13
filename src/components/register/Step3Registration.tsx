@@ -3,7 +3,7 @@ import { useT } from '../../lang';
 import { Field } from './Field';
 import { ParticipantFields } from './ParticipantFields';
 import {
-  ADULT_LEVELS, KIDS_LEVELS, MAX_ADULTS, MAX_KIDS, participantDiscount, participantFullPrice, squareFee,
+  ADULT_LEVELS, KIDS_LEVELS, MAX_ADULTS, MAX_KIDS, registrationTotals,
 } from '../../registerData';
 import { resizeParticipants } from '../../registerTypes';
 import type { RegisterFormData } from '../../registerTypes';
@@ -52,15 +52,7 @@ export function Step3Registration({ data, setData, kidsErrors, adultsErrors, atL
     });
   }
 
-  const fullSubtotal =
-    data.kids.reduce((sum, p) => sum + participantFullPrice(p, KIDS_LEVELS), 0) +
-    data.adults.reduce((sum, p) => sum + participantFullPrice(p, ADULT_LEVELS), 0);
-  const discount =
-    data.kids.reduce((sum, p) => sum + participantDiscount(p, KIDS_LEVELS), 0) +
-    data.adults.reduce((sum, p) => sum + participantDiscount(p, ADULT_LEVELS), 0);
-  const subtotal = fullSubtotal - discount;
-  const fee = squareFee(subtotal);
-  const total = subtotal + fee;
+  const { fullSubtotal, siblingDiscount, parentDiscount, fee, total } = registrationTotals(data);
 
   return (
     <div className="space-y-5">
@@ -124,10 +116,16 @@ export function Step3Registration({ data, setData, kidsErrors, adultsErrors, atL
           <span className="text-gray-500 dark:text-gray-400">{s.subtotal}</span>
           <span className="pmg-figure text-(--premium-black) dark:text-white">${fullSubtotal.toFixed(2)}</span>
         </div>
-        {discount > 0 && (
+        {siblingDiscount > 0 && (
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-500 dark:text-gray-400">{s.siblingDiscountLine}</span>
+            <span className="pmg-figure text-emerald-600 dark:text-emerald-400">-${siblingDiscount.toFixed(2)}</span>
+          </div>
+        )}
+        {parentDiscount > 0 && (
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-500 dark:text-gray-400">{s.parentDiscountLine}</span>
-            <span className="pmg-figure text-emerald-600 dark:text-emerald-400">-${discount.toFixed(2)}</span>
+            <span className="pmg-figure text-emerald-600 dark:text-emerald-400">-${parentDiscount.toFixed(2)}</span>
           </div>
         )}
         <div className="flex items-center justify-between text-sm">

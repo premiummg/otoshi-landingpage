@@ -239,10 +239,11 @@ export const EN = {
       notesHint: 'Optional',
       atLeastOneClass: 'Select at least one class to continue.',
       subtotal: 'Subtotal',
+      siblingDiscountLine: 'Sibling discount (15%)',
       parentDiscountLine: 'Parent discount (50%)',
       fee: 'Square processing fee',
       total: 'Total',
-      pricingNote: 'Monthly tuition. The club will follow up separately to arrange payment through Square.',
+      pricingNote: 'Monthly tuition. After you submit, you’ll be taken to Square to pay securely.',
     },
     step4: {
       title: 'Required Agreements',
@@ -271,6 +272,7 @@ export const EN = {
     success: {
       title: 'Registration received!',
       body: 'We’ve sent your registration to the Otoshi team - they’ll be in touch shortly.',
+      paidNote: 'Thank you! Once your payment is complete, Square will email you a receipt.',
       paymentNote: 'Payment isn’t collected here yet. The club will follow up separately about paying through Square.',
       backHome: 'Back to home',
     },
@@ -530,10 +532,11 @@ export const FR: Copy = {
       notesHint: 'Optionnel',
       atLeastOneClass: 'Sélectionnez au moins un cours pour continuer.',
       subtotal: 'Sous-total',
+      siblingDiscountLine: 'Rabais fratrie (15 %)',
       parentDiscountLine: 'Rabais parent (50 %)',
       fee: 'Frais de traitement Square',
       total: 'Total',
-      pricingNote: 'Frais mensuels. Le club communiquera séparément pour organiser le paiement via Square.',
+      pricingNote: 'Frais mensuels. Après l’envoi, vous serez redirigé vers Square pour payer de façon sécurisée.',
     },
     step4: {
       title: 'Ententes requises',
@@ -568,6 +571,7 @@ export const FR: Copy = {
     success: {
       title: 'Inscription reçue!',
       body: 'Nous avons envoyé votre inscription à l’équipe d’Otoshi - elle communiquera avec vous sous peu.',
+      paidNote: 'Merci! Une fois votre paiement terminé, Square vous enverra un reçu par courriel.',
       paymentNote: 'Le paiement n’est pas encore collecté ici. Le club vous contactera séparément au sujet du paiement par Square.',
       backHome: 'Retour à l’accueil',
     },
