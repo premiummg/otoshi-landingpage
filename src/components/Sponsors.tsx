@@ -12,6 +12,7 @@ import { webp, BAND_PANEL } from '../palette';
 export const SPONSORS = [
   { file: 'sponsor-lumar.png', name: 'Lumar Electric', width: 400, height: 146, url: 'https://lumarelectric.ca/' },
   { file: 'sponsor-max.jpg', name: 'Max Health', width: 400, height: 203, url: 'https://www.maxhealthnb.ca/' },
+  { file: 'sponsor-bonafide.png', name: 'Bona Fide Studio', width: 400, height: 291, url: 'https://bonafidestudio.ca/' },
 ];
 
 export function Sponsors() {
