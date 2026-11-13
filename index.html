@@ -26,7 +26,13 @@
      what Largest Contentful Paint is measured against. Preloading it starts
      the download alongside the JS bundle rather than after the component
      that references it has mounted. -->
+<!-- Fonts used by the hero (h1 black, eyebrow bold, body regular). -->
+<link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/montserrat-900.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/montserrat-700.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/poppins-400.woff2">
 <link rel="preload" as="image" href="/media/hero-poster.webp" fetchpriority="high">
+<!-- Turnstile (used on /register) loads from here. -->
+<link rel="preconnect" href="https://challenges.cloudflare.com" crossorigin>
 <!-- Everything between these markers is replaced per route at build time by
      scripts/prerender.mjs (title, description, canonical, hreflang, Open
      Graph, JSON-LD). What is written here is only what `vite dev` shows,

@@ -71,15 +71,30 @@ function chunkFilesFor(srcKey, seen = new Set()) {
   return [entry.file, ...nested];
 }
 
+// Files the template already modulepreloads (e.g. rolldown-runtime, which the
+// main bundle imports): skip them so a route doesn't hint the same module
+// twice, once without `crossorigin` - a different credentials mode, so the
+// browser would fetch it a second time.
+const templateHrefs = new Set([...template.matchAll(/<link rel="modulepreload"[^>]*href="([^"]+)"/g)].map(m => m[1]));
+
 function preloadLinksFor(path) {
   const srcKey = path === '/register' ? 'src/pages/RegisterPage.tsx'
     : path.startsWith('/programs/') ? 'src/pages/ProgramDetailPage.tsx'
     : null;
   if (!srcKey) return '';
-  return chunkFilesFor(srcKey).map(f => `<link rel="modulepreload" href="/${f}">`).join('\n');
+  return chunkFilesFor(srcKey)
+    .filter(f => !templateHrefs.has(`/${f}`))
+    .map(f => `<link rel="modulepreload" crossorigin href="/${f}">`)
+    .join('\n');
 }
 
 const SEO_BLOCK = /<!--seo-start-->[\s\S]*?<!--seo-end-->/;
+// React 19 hoists a `<link rel="preload" as="image">` for every <img> it
+// renders, which includes react-phone-number-input's flag from a third-party
+// host. That puts a cross-origin fetch on the critical path of /register for
+// a tiny icon; the <img> itself still loads normally. Same-origin hints (the
+// logo) are kept.
+const EXTERNAL_IMAGE_PRELOAD = /<link rel="preload" as="image" href="https?:\/\/[^"]*"\s*\/?>/g;
 const APP_SLOT = '<!--app-html-->';
 const HTML_TAG = '<html lang="en">';
 
@@ -121,7 +136,7 @@ for (const { url, path } of routes) {
   const page = template
     .replace(HTML_TAG, () => `<html lang="${lang}">`)
     .replace(SEO_BLOCK, () => (preloads ? `${head}\n${preloads}` : head))
-    .replace(APP_SLOT, () => html);
+    .replace(APP_SLOT, () => html.replace(EXTERNAL_IMAGE_PRELOAD, ''));
 
   // `/` becomes dist/index.html, `/fr/register` becomes
   // dist/fr/register/index.html - directory-style so a static host serves it

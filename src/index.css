@@ -13,6 +13,60 @@
 @import "react-phone-number-input/style.css";
 @config "../tailwind.config.js";
 
+/* Latin-subset WOFF2 copies (public/fonts) of the same families the package
+   ships as full TTFs. Declared AFTER the package's @import so that, for the
+   same family+weight+style, these are the last (winning) rules; the package's
+   TTF rules are never matched, so those files are not downloaded. */
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/montserrat-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/montserrat-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/montserrat-800.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/montserrat-900.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Tailwind v4 dropped the v3 preflight default that gave unstyled buttons
    cursor: pointer - restoring it for parity with the two sibling apps. */
 button:not(:disabled) {

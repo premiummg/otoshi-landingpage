@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiMapPin, FiPhone } from 'react-icons/fi';
 import { Hero as UiHero } from '@premiummg/ui';
@@ -32,10 +32,42 @@ const HERO_ACCENT_OVERRIDE = {
 // look like a reskinned Premium page instead of its own identity. `overlay`
 // stays at its own default (`"scrim"`, the plain black gradient) rather
 // than `"acadian"` - just this page's own choice, not a package change.
+// The 2 MB clip is only worth it on a wide screen with a real connection.
+// Decided after mount (default: poster only) so the server-rendered HTML and
+// the first client render are identical. Reduced motion is still handled
+// inside the UI package's Hero.
+function useHeroVideo() {
+  const [enabled, setEnabled] = useState(false);
+  useEffect(() => {
+    const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    if (conn?.saveData === true) return;
+    const mq = window.matchMedia('(min-width: 768px)');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let timer: number | undefined;
+    const update = () => {
+      window.clearTimeout(timer);
+      if (mq.matches && !reduce.matches) {
+        // Let the poster paint (LCP) before the video starts loading.
+        timer = window.setTimeout(() => setEnabled(true), 1000);
+      } else {
+        setEnabled(false);
+      }
+    };
+    update();
+    mq.addEventListener('change', update);
+    return () => {
+      window.clearTimeout(timer);
+      mq.removeEventListener('change', update);
+    };
+  }, []);
+  return enabled;
+}
+
 export function Hero({ go }: { go: (id: string) => void }) {
   const t = useT();
   const navigate = useNavigate();
   const href = useLocaleHref();
+  const showVideo = useHeroVideo();
 
   return (
     <div style={HERO_ACCENT_OVERRIDE}>
@@ -45,7 +77,7 @@ export function Hero({ go }: { go: (id: string) => void }) {
         title={t.hero.title}
         sub={t.hero.sub}
         imageSrc={webp('hero-poster.jpg')}
-        videoSrc={`${MEDIA}/hero.mp4`}
+        videoSrc={showVideo ? `${MEDIA}/hero.mp4` : undefined}
         primaryAction={{ label: t.hero.cta, onClick: () => navigate(href('/register')) }}
         secondaryAction={{ label: t.hero.alt, onClick: () => go('programs') }}
         caption={
